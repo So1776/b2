@@ -1,82 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Internship Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
     }
 
     header {
-      background: #dcdcdc;
-      padding: 20px;
-      border-bottom: 1px solid #aaa;
+      background: #fff;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    main {
-      padding: 20px;
-      min-height: 400px;
+    nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: bold;
+    }
+
+    .intro {
+      padding: 2rem;
+      text-align: center;
+      background: #eef6fc;
+    }
+
+    .intro h1 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .intro p {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    .login-section {
+      max-width: 400px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .login-section label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .login-section input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .login-section .cta {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .login-section .cta a {
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: bold;
     }
 
     footer {
-      background: #dcdcdc;
-      padding: 20px;
-      border-top: 1px solid #aaa;
       text-align: center;
-    }
-
-    .section {
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px dashed #bbb;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+      background: #fff;
     }
   </style>
 </head>
-
 <body>
 
   <header>
-    <h1>Internship Tracker</h1>
-    <p>Simplify your internship search and stay organized.</p>
+    <div><strong>Internship Tracker</strong></div>
+    <nav>
+      <a href="#">Our Mission</a>
+      <a href="#">Find Internships</a>
+      <a href="#">Track Your Applications</a>
+    </nav>
   </header>
 
-  <main>
-    <div class="section">
-      <h2>Our Mission</h2>
-      <p>
-        We help college students discover real-time internships and track their applications
-        all in one place.
-      </p>
-    </div>
+  <section class="intro">
+    <h1>Simplify and organize your internship search</h1>
+    <p>Discover real-time internships and track your applications in with ease</p>
+  </section>
 
-    <div class="section">
-      <h2>Find Internships</h2>
-      <p>
-        Browse up-to-date internship listings tailored to your interests and major.
-      </p>
-    </div>
+  <section class="login-section">
+    <form>
+      <label for="login">Login:</label>
+      <input type="text" id="login" name="login">
 
-    <div class="section">
-      <h2>Track Your Progress</h2>
-      <p>
-        Keep all your applications organized — from “Saved” to “Applied” to “Interviewing.”
-      </p>
-    </div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password">
 
-    <div class="section">
-      <h2>Get Started</h2>
-      <p>
-        Create an account to begin searching and tracking your internships.
-      </p>
+      <button type="submit">Sign In</button>
+    </form>
+
+    <div class="cta">
+      <p>New to the website? <a href="#">Get started</a></p>
     </div>
-  </main>
+  </section>
 
   <footer>
-    <p></p>
+
   </footer>
 
 </body>
 </html>
-
