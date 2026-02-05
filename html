@@ -1,34 +1,68 @@
- <header>
-    <div><strong>Internship Tracker</strong></div>
-    <nav>
+<header>
+  <div><strong>Internship Tracker</strong></div>
+   <nav>
       <a href="index.html">Home</a>
       <a href="#">Our Mission</a>
       <a href="#">Find Internships</a>
-    </nav>
-  </header>
+      <a href="https://www.cs.drexel.edu/~rrm89/b2/signup.html">Sign Up</a>
+  </nav>
+    
 
-  <section class="form-section">
-    <h2>Create Your Account</h2>
+</header>
 
-    <form>
-      <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name">
+<section class="form-section">
+  <h2>Create Your Account</h2>
 
-      <label for="email">Email Address:</label>
-      <input type="email" id="email" name="email">
+  
+  <form id="signupForm">
 
-      <label for="password">Create Password:</label>
-      <input type="password" id="password" name="password">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" name="name">
 
-      <label for="major">Major:</label>
-      <input type="text" id="major" name="major">
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email">
 
-      <label for="gradyear">Graduation Year:</label>
-      <input type="number" id="gradyear" name="gradyear">
+    <label for="password">Create Password:</label>
+    <input type="password" id="password" name="password">
 
-      <button type="submit">Create Account</button>
-    </form>
-  </section>
+    <label for="major">Major:</label>
+    <input type="text" id="major" name="major">
+
+    <label for="gradyear">Graduation Year:</label>
+    <input type="number" id="gradyear" name="gradyear">
+
+    <button type="submit">Create Account</button>
+
+  </form>
+</section>
+
+
+<script>
+  const form = document.getElementById("signupForm");
+
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const major = document.getElementById("major").value;
+    const gradyear = document.getElementById("gradyear").value;
+
+    if (
+      name === "" ||
+      email === "" ||
+      password === "" ||
+      major === "" ||
+      gradyear === ""
+    ) {
+      alert("Please fill in all fields.");
+    } else {
+      alert("Account created successfully!");
+      form.reset();
+    }
+  });
+</script>
 
 </body>
 </html>
