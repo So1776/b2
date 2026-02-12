@@ -7,22 +7,18 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(0, 102, 204, 0.25), transparent 60%),
-        radial-gradient(circle at bottom right, rgba(255, 204, 0, 0.25), transparent 60%),
-        #f9f9f9;
+      background: #f9f9f9;
       color: #333;
     }
 
     header {
-      background: linear-gradient(90deg, #005bbb, #ffd500);
+      background: #dcdcdc;
       padding: 20px;
       border-bottom: 1px solid #aaa;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
 
     .header-left {
       display: flex;
@@ -70,9 +66,6 @@
 
     main p {
       animation-delay: 0.3s; /* delay paragraph slightly after heading */
-      font-size: 1.2rem;
-      color: #555;
-      max-width: 600px;
     }
 
     @keyframes riseUp {
@@ -105,16 +98,14 @@
 <body>
 
   <header>
-    <div style="display:flex; align-items:center; gap:2rem;">
-      <h1 style="margin:0; font-size:1.8rem;">Internship Tracker</h1>
-
+    <div class="header-left">
+      <h1>Internship Tracker</h1>
       <div class="nav-links">
         <span>Our Mission</span>
         <span>Find Internships</span>
         <span>Track Your Progress</span>
       </div>
     </div>
-
     <a href="login.html" class="signup">Login</a>
   </header>
 
