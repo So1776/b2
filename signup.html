@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Sign Up - Internship Tracker</title>
 
-  <!-- WORKING Font Awesome CDN -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -53,6 +53,7 @@
       width: 100%;
       height: 46px;
       box-sizing: border-box;
+      transition: border 0.3s;
     }
 
     .password-container {
@@ -76,14 +77,18 @@
     }
 
     .error {
-      border: 2px solid red;
+      border: 2px solid red !important;
+    }
+
+    .success {
+      border: 2px solid green !important;
     }
 
     .error-message {
       color: red;
       font-size: 0.85rem;
-      visibility: hidden;  /* Keep space reserved */
-      height: 18px;        /* Approximate line height */
+      visibility: hidden;
+      height: 18px;
       margin-top: -5px;
       margin-bottom: 5px;
     }
@@ -129,7 +134,7 @@
       <input type="password" id="password">
       <i class="fa-solid fa-eye" onclick="togglePassword('password', this)"></i>
     </div>
-    <div class="error-message" id="passwordError">Please fill out this field.</div>
+    <div class="error-message" id="passwordError">Password must be at least 12 characters and include a special character (!@#$%^&*()).</div>
 
     <label>Confirm Password:</label>
     <div class="password-container">
@@ -177,13 +182,29 @@
   }
 
   const form = document.getElementById("signupForm");
+  const password = document.getElementById("password");
+  const passwordError = document.getElementById("passwordError");
+
+  // Real-time password validation
+  password.addEventListener("input", function() {
+    const value = password.value;
+    const specialCharPattern = /[!@#$%^&*()]/;
+    if (value.length >= 12 && specialCharPattern.test(value)) {
+      password.classList.remove("error");
+      password.classList.add("success");
+      passwordError.style.visibility = "hidden";
+    } else {
+      password.classList.remove("success");
+      password.classList.add("error");
+      passwordError.style.visibility = "visible";
+    }
+  });
 
   form.addEventListener("submit", function(event) {
     event.preventDefault();
 
     const name = document.getElementById("name");
     const email = document.getElementById("email");
-    const password = document.getElementById("password");
     const confirmPassword = document.getElementById("confirmPassword");
     const major = document.getElementById("major");
     const gradyear = document.getElementById("gradyear");
@@ -191,10 +212,14 @@
     let hasError = false;
 
     // Clear old errors
-    document.querySelectorAll("input, select").forEach(el => el.classList.remove("error"));
+    document.querySelectorAll("input, select").forEach(el => {
+      el.classList.remove("error");
+      el.classList.remove("success");
+    });
     document.querySelectorAll(".error-message").forEach(el => el.style.visibility = "hidden");
 
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
+    const specialCharPattern = /[!@#$%^&*()]/;
 
     if (name.value.trim() === "") {
       name.classList.add("error");
@@ -208,9 +233,10 @@
       hasError = true;
     }
 
-    if (password.value.trim() === "") {
+    // Password validation
+    if (password.value.length < 12 || !specialCharPattern.test(password.value)) {
       password.classList.add("error");
-      document.getElementById("passwordError").style.visibility = "visible";
+      passwordError.style.visibility = "visible";
       hasError = true;
     }
 
