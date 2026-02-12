@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Sign Up - Internship Tracker</title>
+
+  <!-- WORKING Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    /* General page styles like index.html */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -16,43 +19,19 @@
       background: #dcdcdc;
       padding: 20px;
       border-bottom: 1px solid #aaa;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
-    header strong {
-      font-size: 1.8rem;
-    }
-
-    nav a {
-      margin-left: 1.5rem;
-      font-weight: bold;
-      text-decoration: none;
-      color: #333;
-    }
-
-    /* Center the form section vertically and horizontally */
     .form-section {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 100px); /* full height minus header/footer */
-      padding: 0 20px;
-      text-align: center;
+      height: calc(100vh - 80px);
     }
 
-    .form-section h2 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    /* Form styling like a card */
     form {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.8rem;
       background: #fff;
       padding: 30px 40px;
       border-radius: 8px;
@@ -62,18 +41,53 @@
     }
 
     label {
-      text-align: left;
       font-weight: bold;
+      text-align: left;
     }
 
-    input {
-      padding: 10px;
+    input, select {
+      padding: 12px;
       border: 1px solid #aaa;
       border-radius: 5px;
       font-size: 1rem;
+      width: 100%;
+      height: 46px;
+      box-sizing: border-box;
     }
 
-    /* Buttons styled like index.html */
+    .password-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-container input {
+      padding-right: 40px;
+      height: 46px;
+      box-sizing: border-box;
+    }
+
+    .password-container i {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #555;
+    }
+
+    .error {
+      border: 2px solid red;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.85rem;
+      visibility: hidden;  /* Keep space reserved */
+      height: 18px;        /* Approximate line height */
+      margin-top: -5px;
+      margin-bottom: 5px;
+    }
+
     button {
       padding: 10px;
       background: #007BFF;
@@ -82,19 +96,11 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 1rem;
       margin-top: 10px;
     }
 
     button:hover {
       background: #0056b3;
-    }
-
-    footer {
-      background: #dcdcdc;
-      padding: 20px;
-      border-top: 1px solid #aaa;
-      text-align: center;
     }
   </style>
 </head>
@@ -102,61 +108,144 @@
 <body>
 
 <header>
-  <div><strong>Internship Tracker</strong></div>
-  <nav>
-      <a href="index.html">Home</a>
-      <a href="#">Our Mission</a>
-      <a href="#">Find Internships</a>
-  </nav>
+  <strong>Internship Tracker</strong>
 </header>
 
 <section class="form-section">
-  <h2>Create Your Account</h2>
+  <form id="signupForm" novalidate>
 
-  <form id="signupForm">
-    <label for="name">Full Name:</label>
-    <input type="text" id="name" name="name">
+    <h2>Create Your Account</h2>
 
-    <label for="email">Email Address:</label>
-    <input type="email" id="email" name="email">
+    <label>Full Name:</label>
+    <input type="text" id="name">
+    <div class="error-message" id="nameError">Please fill out this field.</div>
 
-    <label for="password">Create Password:</label>
-    <input type="password" id="password" name="password">
+    <label>Email Address:</label>
+    <input type="email" id="email">
+    <div class="error-message" id="emailError">Please enter a valid email address.</div>
 
-    <label for="major">Major:</label>
-    <input type="text" id="major" name="major">
+    <label>Create Password:</label>
+    <div class="password-container">
+      <input type="password" id="password">
+      <i class="fa-solid fa-eye" onclick="togglePassword('password', this)"></i>
+    </div>
+    <div class="error-message" id="passwordError">Please fill out this field.</div>
 
-    <label for="gradyear">Graduation Year:</label>
-    <input type="number" id="gradyear" name="gradyear">
+    <label>Confirm Password:</label>
+    <div class="password-container">
+      <input type="password" id="confirmPassword">
+      <i class="fa-solid fa-eye" onclick="togglePassword('confirmPassword', this)"></i>
+    </div>
+    <div class="error-message" id="confirmPasswordError">Passwords do not match.</div>
+
+    <label>Major:</label>
+    <select id="major">
+      <option value="">Select Major</option>
+      <option>Computer Science</option>
+      <option>Computer Engineering</option>
+      <option>Cybersecurity</option>
+      <option>Business</option>
+    </select>
+    <div class="error-message" id="majorError">Please select a major.</div>
+
+    <label>Graduation Year:</label>
+    <select id="gradyear">
+      <option value="">Select Year</option>
+      <option>2026</option>
+      <option>2027</option>
+      <option>2028</option>
+      <option>2029</option>
+      <option>2030</option>
+    </select>
+    <div class="error-message" id="gradyearError">Please select a year.</div>
 
     <button type="submit">Create Account</button>
+
   </form>
 </section>
 
 <script>
+  function togglePassword(fieldId, icon) {
+    const input = document.getElementById(fieldId);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+  }
+
   const form = document.getElementById("signupForm");
 
   form.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const major = document.getElementById("major").value;
-    const gradyear = document.getElementById("gradyear").value;
+    const name = document.getElementById("name");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const major = document.getElementById("major");
+    const gradyear = document.getElementById("gradyear");
 
-    if (
-      name === "" ||
-      email === "" ||
-      password === "" ||
-      major === "" ||
-      gradyear === ""
-    ) {
-      alert("Please fill in all fields.");
-    } else {
-      alert("Account created successfully!");
-      form.reset();
+    let hasError = false;
+
+    // Clear old errors
+    document.querySelectorAll("input, select").forEach(el => el.classList.remove("error"));
+    document.querySelectorAll(".error-message").forEach(el => el.style.visibility = "hidden");
+
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
+
+    if (name.value.trim() === "") {
+      name.classList.add("error");
+      document.getElementById("nameError").style.visibility = "visible";
+      hasError = true;
     }
+
+    if (!emailPattern.test(email.value)) {
+      email.classList.add("error");
+      document.getElementById("emailError").style.visibility = "visible";
+      hasError = true;
+    }
+
+    if (password.value.trim() === "") {
+      password.classList.add("error");
+      document.getElementById("passwordError").style.visibility = "visible";
+      hasError = true;
+    }
+
+    if (password.value !== confirmPassword.value || confirmPassword.value === "") {
+      confirmPassword.classList.add("error");
+      document.getElementById("confirmPasswordError").style.visibility = "visible";
+      hasError = true;
+    }
+
+    if (major.value === "") {
+      major.classList.add("error");
+      document.getElementById("majorError").style.visibility = "visible";
+      hasError = true;
+    }
+
+    if (gradyear.value === "") {
+      gradyear.classList.add("error");
+      document.getElementById("gradyearError").style.visibility = "visible";
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    const user = {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      major: major.value,
+      gradyear: gradyear.value
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    alert("Account created successfully!");
+    form.reset();
   });
 </script>
 

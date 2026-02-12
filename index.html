@@ -23,7 +23,7 @@
     .header-left {
       display: flex;
       align-items: center;
-      gap: 2rem; /* space between title and links */
+      gap: 2rem;
     }
 
     .header-left h1 {
@@ -33,7 +33,7 @@
 
     .nav-links {
       display: flex;
-      gap: 1.5rem; /* space between links */
+      gap: 1.5rem;
       font-weight: bold;
       cursor: pointer;
     }
@@ -53,8 +53,26 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      height: calc(100vh - 100px); /* full height minus header/footer */
+      height: calc(100vh - 100px);
       padding: 0 20px;
+      overflow: hidden; /* ensures text coming from bottom is hidden initially */
+    }
+
+    main h2, main p {
+      opacity: 0;
+      transform: translateY(50px);
+      animation: riseUp 1s forwards;
+    }
+
+    main p {
+      animation-delay: 0.3s; /* delay paragraph slightly after heading */
+    }
+
+    @keyframes riseUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     main h2 {
@@ -102,4 +120,3 @@
 
 </body>
 </html>
-
