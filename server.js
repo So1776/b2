@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = 3000;
@@ -39,6 +40,8 @@ db.run(`
     FOREIGN KEY (user_id) REFERENCES users(id)
   )
 `);
+
+db.run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_resumes_user_id_unique ON resumes(user_id);`);
 
 // --- Multer config (storage + file type + size limit) ---
 const storage = multer.diskStorage({
@@ -144,6 +147,24 @@ function requireAuth(req, res, next) {
 // LOCKED ROUTE: proves login is working
 app.get("/me", requireAuth, (req, res) => {
   res.json({ message: "You are logged in", user: req.user });
+});
+
+// Fetch the logged-in user's resume metadata
+app.get("/resume", requireAuth, (req, res) => {
+  const userId = req.user.user_id; // matches your JWT payload
+
+  db.get(
+    `SELECT id, user_id, original_filename, stored_filename, mime_type, size, upload_path, uploaded_at
+     FROM resumes
+     WHERE user_id = ?
+     LIMIT 1`,
+    [userId],
+    (err, row) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!row) return res.status(404).json({ error: "No resume found" });
+      return res.json({ resume: row });
+    }
+  );
 });
 
 // Simple protected resume upload route
