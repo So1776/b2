@@ -62,14 +62,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h2 { margin-top: 0; }
@@ -121,10 +115,7 @@
       font-size: 0.85rem;
     }
 
-    .skill-bar .bar-label {
-      width: 80px;
-    }
-
+    .skill-bar .bar-label { width: 80px; }
     .skill-bar .bar-container {
       flex: 1;
       background: #e0e0e0;
@@ -133,7 +124,6 @@
       overflow: hidden;
       position: relative;
     }
-
     .skill-bar .bar-fill {
       height: 100%;
       background: #005bbb;
@@ -141,10 +131,35 @@
       width: 0%;
       transition: width 0.5s ease;
     }
+    .skill-bar .bar-percent { width: 40px; text-align: right; }
 
-    .skill-bar .bar-percent {
-      width: 40px;
-      text-align: right;
+    /* Resume upload styling */
+    .resume-upload {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .resume-upload button {
+      background: #005bbb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .resume-upload button:hover { background: #004499; }
+
+    .resume-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-note {
+      font-size: 0.85rem;
+      color: #666;
     }
   </style>
 </head>
@@ -236,7 +251,11 @@
   <div id="resume" class="dashboard-section">
     <h2>Your Resume</h2>
     <p>Upload or edit your resume here.</p>
-    <button>Upload Resume</button>
+    <div class="resume-upload">
+      <button onclick="document.getElementById('resumeFile').click()">Upload Resume</button>
+      <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" />
+      <span class="file-note">File must be 5MB or else it won't work</span>
+    </div>
   </div>
 
   <div id="profile" class="dashboard-section">
@@ -248,21 +267,13 @@
 
 <script>
   function showSection(sectionId) {
-    document.querySelectorAll('.dashboard-section').forEach(sec => {
-      sec.classList.remove('active');
-    });
-
-    const activeSection = document.getElementById(sectionId);
-    activeSection.classList.add('active');
+    document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
   }
 
   function toggleDetails(card) {
     const details = card.querySelector('.job-details');
-    if(details.style.display === 'flex') {
-      details.style.display = 'none';
-    } else {
-      details.style.display = 'flex';
-    }
+    details.style.display = (details.style.display === 'flex') ? 'none' : 'flex';
   }
 </script>
 
