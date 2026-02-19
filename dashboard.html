@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Internship Tracker Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      background: #005bbb;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+    }
+
+    .nav-top {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .nav-item:hover {
+      text-decoration: underline;
+    }
+
+    .logout {
+      background: #ffd500;
+      color: #005bbb;
+      padding: 8px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    main { padding: 30px; }
+
+    .dashboard-section { 
+      display: none; 
+      opacity: 0;
+    }
+
+    .dashboard-section.active { 
+      display: block; 
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 { margin-top: 0; }
+
+    /* Job card styling */
+    .job-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .job-header h3 { margin: 0; }
+    .company { color: #666; font-size: 0.9rem; }
+
+    .job-details {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+      color: #555;
+    }
+
+    .job-details div { display: flex; align-items: center; gap: 10px; }
+
+    .job-details i { color: #005bbb; }
+
+    .job-footer { margin-top: 10px; }
+
+    .apply-btn {
+      background: #00d37f;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .apply-btn:hover { background: #00b666; }
+
+    /* Skill Bars */
+    .skill-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .skill-bar .bar-label {
+      width: 80px;
+    }
+
+    .skill-bar .bar-container {
+      flex: 1;
+      background: #e0e0e0;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .skill-bar .bar-fill {
+      height: 100%;
+      background: #005bbb;
+      border-radius: 6px 0 0 6px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .skill-bar .bar-percent {
+      width: 40px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-top">
+    <div class="nav-item" onclick="showSection('jobs')"><i class="fas fa-briefcase"></i> Jobs</div>
+    <div class="nav-item" onclick="showSection('resume')"><i class="fas fa-file-alt"></i> Resume</div>
+    <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</div>
+  </div>
+  <a href="./index.html" class="logout">Logout</a>
+</header>
+
+<main>
+  <div id="jobs" class="dashboard-section active">
+    <h2>Available Computer Internships - Philadelphia, PA</h2>
+
+    <div class="job-card" onclick="toggleDetails(this)">
+      <div class="job-header">
+        <h3>Software Engineering Intern</h3>
+        <span class="company">TechCorp / Software & IT · Early Stage</span>
+      </div>
+      <div class="job-details">
+        <div><strong>Overview:</strong> Work on full-stack web applications, collaborate with engineers.</div>
+        <div><i class="fas fa-map-marker-alt"></i> Philadelphia, PA</div>
+        <div><i class="fas fa-dollar-sign"></i> $25/hr - $40/hr</div>
+        <div><i class="fas fa-clock"></i> Full-time</div>
+        <div><i class="fas fa-home"></i> Onsite</div>
+
+        <div class="skill-bar">
+          <div class="bar-label">Experience</div>
+          <div class="bar-container"><div class="bar-fill" style="width: 70%;"></div></div>
+          <div class="bar-percent">70%</div>
+        </div>
+
+        <div class="skill-bar">
+          <div class="bar-label">Skill</div>
+          <div class="bar-container"><div class="bar-fill" style="width: 80%;"></div></div>
+          <div class="bar-percent">80%</div>
+        </div>
+
+        <div class="skill-bar">
+          <div class="bar-label">Industry</div>
+          <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
+          <div class="bar-percent">60%</div>
+        </div>
+
+        <button class="apply-btn">Apply Now</button>
+      </div>
+    </div>
+
+    <div class="job-card" onclick="toggleDetails(this)">
+      <div class="job-header">
+        <h3>Data Analyst Intern</h3>
+        <span class="company">DataWorks / Analytics · Late Stage</span>
+      </div>
+      <div class="job-details">
+        <div><strong>Overview:</strong> Analyze datasets, create dashboards, and report insights.</div>
+        <div><i class="fas fa-map-marker-alt"></i> Philadelphia, PA</div>
+        <div><i class="fas fa-dollar-sign"></i> $28/hr - $45/hr</div>
+        <div><i class="fas fa-clock"></i> Full-time</div>
+        <div><i class="fas fa-home"></i> Onsite</div>
+
+        <div class="skill-bar">
+          <div class="bar-label">Experience</div>
+          <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
+          <div class="bar-percent">60%</div>
+        </div>
+
+        <div class="skill-bar">
+          <div class="bar-label">Skill</div>
+          <div class="bar-container"><div class="bar-fill" style="width: 75%;"></div></div>
+          <div class="bar-percent">75%</div>
+        </div>
+
+        <div class="skill-bar">
+          <div class="bar-label">Industry</div>
+          <div class="bar-container"><div class="bar-fill" style="width: 50%;"></div></div>
+          <div class="bar-percent">50%</div>
+        </div>
+
+        <button class="apply-btn">Apply Now</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="resume" class="dashboard-section">
+    <h2>Your Resume</h2>
+    <p>Upload or edit your resume here.</p>
+    <button>Upload Resume</button>
+  </div>
+
+  <div id="profile" class="dashboard-section">
+    <h2>Your Profile</h2>
+    <p>Update your personal information, contact details, and preferences.</p>
+    <button>Edit Profile</button>
+  </div>
+</main>
+
+<script>
+  function showSection(sectionId) {
+    document.querySelectorAll('.dashboard-section').forEach(sec => {
+      sec.classList.remove('active');
+    });
+
+    const activeSection = document.getElementById(sectionId);
+    activeSection.classList.add('active');
+  }
+
+  function toggleDetails(card) {
+    const details = card.querySelector('.job-details');
+    if(details.style.display === 'flex') {
+      details.style.display = 'none';
+    } else {
+      details.style.display = 'flex';
+    }
+  }
+</script>
+
+</body>
+</html>

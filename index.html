@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Internship Tracker</title>
+
   <style>
     body {
       margin: 0;
@@ -23,7 +24,6 @@
       align-items: center;
     }
 
-
     .header-left {
       display: flex;
       align-items: center;
@@ -33,13 +33,23 @@
     .header-left h1 {
       margin: 0;
       font-size: 1.8rem;
+      color: black;
     }
 
     .nav-links {
       display: flex;
       gap: 1.5rem;
       font-weight: bold;
+    }
+
+    .nav-links span {
+      color: black;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .nav-links span:hover {
+      text-decoration: underline;
     }
 
     .signup {
@@ -49,6 +59,11 @@
       border-radius: 5px;
       text-decoration: none;
       font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .signup:hover {
+      background: #0056b3;
     }
 
     main {
@@ -59,7 +74,7 @@
       text-align: center;
       height: calc(100vh - 100px);
       padding: 0 20px;
-      overflow: hidden; /* ensures text coming from bottom is hidden initially */
+      overflow: hidden;
     }
 
     main h2, main p {
@@ -69,7 +84,7 @@
     }
 
     main p {
-      animation-delay: 0.3s; /* delay paragraph slightly after heading */
+      animation-delay: 0.3s;
       font-size: 1.2rem;
       color: #555;
       max-width: 600px;
@@ -87,12 +102,6 @@
       margin-bottom: 1rem;
     }
 
-    main p {
-      font-size: 1.2rem;
-      color: #555;
-      max-width: 600px;
-    }
-
     footer {
       background: #dcdcdc;
       padding: 20px;
@@ -105,13 +114,15 @@
 <body>
 
   <header>
-    <div style="display:flex; align-items:center; gap:2rem;">
-      <h1 style="margin:0; font-size:1.8rem;">Internship Tracker</h1>
+    <div class="header-left">
+      <h1>Internship Tracker</h1>
 
+      <!-- EXACT ORDER BELOW -->
       <div class="nav-links">
         <span>Our Mission</span>
         <span>Find Internships</span>
         <span>Track Your Progress</span>
+        <span>About Us</span>
       </div>
     </div>
 

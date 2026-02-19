@@ -11,7 +11,8 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      /* Gradient: 90deg, blue to yellow */
+      background: linear-gradient(90deg, #005bbb 0%, #ffd500 100%);
       background-attachment: fixed;
       min-height: 100vh;
       color: #333;
@@ -22,6 +23,22 @@
       padding: 20px;
       border-bottom: 1px solid #aaa;
       backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;  /* left and right */
+      align-items: center;
+      color: #666666;          
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    header a.home-link {
+      color: #666666;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    header a.home-link:hover {
+      text-decoration: underline;
     }
 
     .form-section {
@@ -119,7 +136,8 @@
 <body>
 
 <header>
-  <strong>Internship Tracker</strong>
+  <span>Internship Tracker</span>
+  <a href="./index.html" class="home-link">Home</a>
 </header>
 
 <section class="form-section">
@@ -129,7 +147,7 @@
 
     <label>Full Name:</label>
     <input type="text" id="name">
-    <div class="error-message" id="nameError">Please fill out this field.</div>
+    <div class="error-message" id="nameError">Please enter both first and last name.</div>
 
     <label>Email Address:</label>
     <input type="email" id="email">
@@ -188,14 +206,44 @@
   }
 
   const form = document.getElementById("signupForm");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
   const password = document.getElementById("password");
+  const confirmPassword = document.getElementById("confirmPassword");
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
   const passwordError = document.getElementById("passwordError");
+  const confirmPasswordError = document.getElementById("confirmPasswordError");
 
-  // Real-time password validation
+  nameInput.addEventListener("input", function() {
+    const words = nameInput.value.trim().split(/\s+/);
+    if (words.length >= 2) {
+      nameInput.classList.remove("error");
+      nameInput.classList.add("success");
+      nameError.style.visibility = "hidden";
+    } else {
+      nameInput.classList.remove("success");
+      nameInput.classList.add("error");
+      nameError.style.visibility = "visible";
+    }
+  });
+
+  emailInput.addEventListener("input", function() {
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
+    if (emailPattern.test(emailInput.value)) {
+      emailInput.classList.remove("error");
+      emailInput.classList.add("success");
+      emailError.style.visibility = "hidden";
+    } else {
+      emailInput.classList.remove("success");
+      emailInput.classList.add("error");
+      emailError.style.visibility = "visible";
+    }
+  });
+
   password.addEventListener("input", function() {
-    const value = password.value;
     const specialCharPattern = /[!@#$%^&*()]/;
-    if (value.length >= 12 && specialCharPattern.test(value)) {
+    if (password.value.length >= 12 && specialCharPattern.test(password.value)) {
       password.classList.remove("error");
       password.classList.add("success");
       passwordError.style.visibility = "hidden";
@@ -209,15 +257,11 @@
   form.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const name = document.getElementById("name");
-    const email = document.getElementById("email");
-    const confirmPassword = document.getElementById("confirmPassword");
     const major = document.getElementById("major");
     const gradyear = document.getElementById("gradyear");
 
     let hasError = false;
 
-    // Clear old errors
     document.querySelectorAll("input, select").forEach(el => {
       el.classList.remove("error");
       el.classList.remove("success");
@@ -227,48 +271,59 @@
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/i;
     const specialCharPattern = /[!@#$%^&*()]/;
 
-    if (name.value.trim() === "") {
-      name.classList.add("error");
-      document.getElementById("nameError").style.visibility = "visible";
+    if (nameInput.value.trim().split(/\s+/).length < 2) {
+      nameInput.classList.add("error");
+      nameError.style.visibility = "visible";
       hasError = true;
+    } else {
+      nameInput.classList.add("success");
     }
 
-    if (!emailPattern.test(email.value)) {
-      email.classList.add("error");
-      document.getElementById("emailError").style.visibility = "visible";
+    if (!emailPattern.test(emailInput.value)) {
+      emailInput.classList.add("error");
+      emailError.style.visibility = "visible";
       hasError = true;
+    } else {
+      emailInput.classList.add("success");
     }
 
-    // Password validation
     if (password.value.length < 12 || !specialCharPattern.test(password.value)) {
       password.classList.add("error");
       passwordError.style.visibility = "visible";
       hasError = true;
+    } else {
+      password.classList.add("success");
     }
 
     if (password.value !== confirmPassword.value || confirmPassword.value === "") {
       confirmPassword.classList.add("error");
-      document.getElementById("confirmPasswordError").style.visibility = "visible";
+      confirmPasswordError.style.visibility = "visible";
       hasError = true;
+    } else {
+      confirmPassword.classList.add("success");
     }
 
     if (major.value === "") {
       major.classList.add("error");
       document.getElementById("majorError").style.visibility = "visible";
       hasError = true;
+    } else {
+      major.classList.add("success");
     }
 
     if (gradyear.value === "") {
       gradyear.classList.add("error");
       document.getElementById("gradyearError").style.visibility = "visible";
       hasError = true;
+    } else {
+      gradyear.classList.add("success");
     }
 
     if (hasError) return;
 
     const user = {
-      name: name.value,
-      email: email.value,
+      name: nameInput.value,
+      email: emailInput.value,
       password: password.value,
       major: major.value,
       gradyear: gradyear.value
@@ -278,6 +333,8 @@
 
     alert("Account created successfully!");
     form.reset();
+
+    document.querySelectorAll("input, select").forEach(el => el.classList.remove("success"));
   });
 </script>
 

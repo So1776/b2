@@ -194,6 +194,7 @@
     togglePassword.textContent = isPassword ? "🙈" : "👁";
   });
 
+  // Handle form submission
   form.addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -221,8 +222,8 @@
 
     if (isValid) {
       console.log("Login successful");
-      form.reset();
-      togglePassword.textContent = "👁";
+      // Redirect to dashboard.html
+      window.location.href = "dashboard.html";
     }
   });
 </script>
