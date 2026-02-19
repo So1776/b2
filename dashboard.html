@@ -352,51 +352,53 @@ textarea {
       <span class="file-note">File must be 5MB or else it won't work</span>
     </div>
   </div>
-
   <div id="profile" class="dashboard-section">
   <h2>Your Profile</h2>
 
-  <div class="profile-card">
+  <div id="profileView" class="profile-card" style="display:none;">
+    <p><strong>Name:</strong> <span id="viewName"></span></p>
+    <p><strong>Major:</strong> <span id="viewMajor"></span></p>
+    <p><strong>Graduation Year:</strong> <span id="viewGrad"></span></p>
+    <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+    <p><strong>Bio:</strong> <span id="viewBio"></span></p>
+
+    <button class="save-btn" onclick="switchToEdit()">Edit Profile</button>
+  </div>
+
+  <!-- EDIT MODE -->
+  <div id="profileEdit" class="profile-card">
     <form id="profileForm">
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" placeholder="Enter your full name">
-        </div>
-
-        <div class="form-group">
-          <label>Major / Program</label>
-          <input type="text" placeholder="e.g., Computer Science">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Graduation Year</label>
-          <input type="number" placeholder="2027">
-        </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="you@example.com">
-        </div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input id="nameInput" type="text" placeholder="Enter your full name">
       </div>
 
       <div class="form-group">
-        <label>Short Bio (optional)</label>
-        <textarea placeholder="Tell us a bit about yourself..."></textarea>
+        <label>Major / Program</label>
+        <input id="majorInput" type="text" placeholder="e.g., Computer Science">
       </div>
 
       <div class="form-group">
-        <label>Upload Resume (PDF)</label>
-        <input type="file" accept="application/pdf">
-        <p class="file-note">PDF only • Max 5MB</p>
+        <label>Graduation Year</label>
+        <input id="gradInput" type="number" placeholder="2027">
       </div>
 
-      <button class="save-btn">Save Profile</button>
+      <div class="form-group">
+        <label>Email</label>
+        <input id="emailInput" type="email" placeholder="you@example.com">
+      </div>
+
+      <div class="form-group">
+        <label>Short Bio</label>
+        <textarea id="bioInput" placeholder="Tell us a bit about yourself..."></textarea>
+      </div>
+             
+      <button type="button" class="save-btn" onclick="saveProfile()">Save Profile</button>
     </form>
   </div>
+</div>
+  
 </div>
 
   
@@ -413,6 +415,32 @@ textarea {
     const details = card.querySelector('.job-details');
     details.style.display = (details.style.display === 'flex') ? 'none' : 'flex';
   }
+  function saveProfile() {
+  const name = document.getElementById('nameInput').value;
+  const major = document.getElementById('majorInput').value;
+  const grad = document.getElementById('gradInput').value;
+  const email = document.getElementById('emailInput').value;
+  const bio = document.getElementById('bioInput').value;
+
+  document.getElementById('viewName').textContent = name;
+  document.getElementById('viewMajor').textContent = major;
+  document.getElementById('viewGrad').textContent = grad;
+  document.getElementById('viewEmail').textContent = email;
+  document.getElementById('viewBio').textContent = bio;
+
+  switchToView();
+}
+
+function switchToView() {
+  document.getElementById('profileEdit').style.display = 'none';
+  document.getElementById('profileView').style.display = 'block';
+}
+
+function switchToEdit() {
+  document.getElementById('profileView').style.display = 'none';
+  document.getElementById('profileEdit').style.display = 'block';
+}
+
 </script>
 
 </body>
