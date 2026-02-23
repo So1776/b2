@@ -11,9 +11,12 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname)));
 
 // --- Database setup ---
-const db = new sqlite3.Database("./database.sqlite");
+const dbPath = path.join(__dirname, "database.sqlite");
+console.log("DB PATH =>", dbPath);
+const db = new sqlite3.Database(dbPath);
 
 // Create users table if it doesn't exist
 db.run(`

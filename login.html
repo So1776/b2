@@ -195,7 +195,7 @@
   });
 
   // Handle form submission
-  form.addEventListener("submit", function(event) {
+  form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     let isValid = true;
@@ -221,10 +221,35 @@
     }
 
     if (isValid) {
-      console.log("Login successful");
-      // Redirect to dashboard.html
-      window.location.href = "dashboard.html";
+  try {
+    // Send login request to backend
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: emailInput.value.trim(),
+        password: passwordInput.value.trim()
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      // show backend error (ex: Invalid email or password)
+      passwordInput.classList.add("error");
+      passwordError.textContent = data.error || "Login failed.";
+      return; // IMPORTANT: stop redirect
     }
+
+    // store token so future requests can be authenticated
+    localStorage.setItem("token", data.token);
+
+    // Redirect on real success
+    window.location.href = "dashboard.html";
+  } catch (err) {
+    passwordError.textContent = "Server error. Try again.";
+  }
+}
   });
 </script>
 
