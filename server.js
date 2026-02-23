@@ -6,6 +6,10 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+// importing axios library to call data from API
+const axios = require("axios");
+require("dotenv").config();
+
 
 const app = express();
 const PORT = 3000;
@@ -29,22 +33,46 @@ db.run(`
   )
 `);
 
-//  Create resumes table (association to users)
-db.run(`
-  CREATE TABLE IF NOT EXISTS resumes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    original_filename TEXT NOT NULL,
-    stored_filename TEXT NOT NULL,
-    mime_type TEXT NOT NULL,
-    size INTEGER NOT NULL,
-    upload_path TEXT NOT NULL,
-    uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-  )
-`);
+// adds resume table ONLY if it is missing
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS resumes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      original_filename TEXT NOT NULL,
+      stored_filename TEXT NOT NULL,
+      mime_type TEXT NOT NULL,
+      size INTEGER NOT NULL,
+      upload_path TEXT NOT NULL,
+      uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `, (err) => {
+    if (err) {
+      console.error("Error creating resumes table:", err.message);
+    } else {
+      console.log("Resumes table created/verified");
+    }
+  });
 
-db.run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_resumes_user_id_unique ON resumes(user_id);`);
+  // Create index for faster lookups
+  db.run(`
+    CREATE INDEX IF NOT EXISTS idx_resumes_user_id 
+    ON resumes(user_id);
+  `, (err) => {
+    if (err) {
+      console.error("Error creating resumes index:", err.message);
+    } else {
+      console.log("Resumes index created/verified");
+    }
+  });
+});
+
+const uploadDir = path.join(__dirname, "uploads/resumes");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log("✅ Created uploads directory");
+} 
 
 // --- Multer config (storage + file type + size limit) ---
 const storage = multer.diskStorage({
@@ -159,8 +187,7 @@ app.get("/resume", requireAuth, (req, res) => {
   db.get(
     `SELECT id, user_id, original_filename, stored_filename, mime_type, size, upload_path, uploaded_at
      FROM resumes
-     WHERE user_id = ?
-     LIMIT 1`,
+     WHERE user_id = ?`,
     [userId],
     (err, row) => {
       if (err) return res.status(500).json({ error: "Database error" });
@@ -202,6 +229,27 @@ app.post("/resume/upload", requireAuth, upload.single("resume"), (req, res) => {
 // Simple error handler for upload/type/size errors
 app.use((err, req, res, next) => {
   res.status(400).json({ error: err.message || "Upload error" });
+});
+
+// calling internship data from serpapi
+app.get("/api/internships", async (req, res) => {
+  const query = req.query.q || "software engineering internship";
+
+  try {
+    const response = await axios.get("https://serpapi.com/search.json", {
+      params: {
+        engine: "google_jobs",
+        q: query,
+        location: "United States",
+        api_key: process.env.SERPAPI_KEY
+      }
+    });
+
+    res.json(response.data.jobs_results);
+  } catch (err) {
+    console.error("SerpApi error:", err.message);
+    res.status(500).json({ error: "Failed to fetch internships" });
+  }
 });
 
 app.listen(PORT, () => {
