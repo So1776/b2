@@ -71,7 +71,7 @@ db.serialize(() => {
 const uploadDir = path.join(__dirname, "uploads/resumes");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
-  console.log("✅ Created uploads directory");
+  console.log("Created uploads directory");
 } 
 
 // --- Multer config (storage + file type + size limit) ---
@@ -187,12 +187,47 @@ app.get("/resume", requireAuth, (req, res) => {
   db.get(
     `SELECT id, user_id, original_filename, stored_filename, mime_type, size, upload_path, uploaded_at
      FROM resumes
-     WHERE user_id = ?`,
+     WHERE user_id = ?
+     LIMIT 1`,
     [userId],
     (err, row) => {
       if (err) return res.status(500).json({ error: "Database error" });
       if (!row) return res.status(404).json({ error: "No resume found" });
       return res.json({ resume: row });
+    }
+  );
+});
+
+
+// Delete the logged-in user's resume (DB + file)
+app.delete("/resume", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+
+  // 1) Find the user's resume
+  db.get(
+    `SELECT id, upload_path
+     FROM resumes
+     WHERE user_id = ?
+     LIMIT 1`,
+    [userId],
+    async (err, row) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!row) return res.status(404).json({ error: "No resume found" });
+
+      // 2) Delete the file from disk (ignore if it's already missing)
+      try {
+        await fs.promises.unlink(row.upload_path);
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          return res.status(500).json({ error: "File delete failed" });
+        }
+      }
+
+      // 3) Delete the DB record
+      db.run(`DELETE FROM resumes WHERE id = ?`, [row.id], function (delErr) {
+        if (delErr) return res.status(500).json({ error: "Database delete failed" });
+        return res.json({ message: "Resume deleted" });
+      });
     }
   );
 });
