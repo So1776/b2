@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Internship Tracker Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
@@ -25,7 +26,7 @@
     .header-left {
       display: flex;
       align-items: center;
-      gap: 2rem; /* Space between logo and nav items */
+      gap: 2rem;
     }
 
     .logo {
@@ -38,36 +39,6 @@
     .logo:hover {
       text-decoration: underline;
     }
-
-    .header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.settings-btn {
-  background: rgba(255,255,255,0.15);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.4);
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.2s;
-}
-
-.settings-btn:hover {
-  background: rgba(255,255,255,0.28);
-}
 
     .nav-top {
       display: flex;
@@ -87,6 +58,30 @@
       text-decoration: underline;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .settings-btn {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .settings-btn:hover {
+      background: rgba(255,255,255,0.28);
+    }
+
     .logout {
       background: #ffd500;
       color: #07294D;
@@ -96,15 +91,17 @@
       font-weight: bold;
     }
 
-    main { padding: 30px; }
+    main {
+      padding: 30px;
+    }
 
-    .dashboard-section { 
-      display: none; 
+    .dashboard-section {
+      display: none;
       opacity: 0;
     }
 
-    .dashboard-section.active { 
-      display: block; 
+    .dashboard-section.active {
+      display: block;
       animation: fadeIn 0.6s ease forwards;
     }
 
@@ -113,9 +110,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    h2 { margin-top: 0; }
+    h2 {
+      margin-top: 0;
+    }
 
-    /* Job card styling */
+    /* Job Cards */
     .job-card {
       background: white;
       border-radius: 10px;
@@ -125,8 +124,14 @@
       cursor: pointer;
     }
 
-    .job-header h3 { margin: 0; }
-    .company { color: #666; font-size: 0.9rem; }
+    .job-header h3 {
+      margin: 0;
+    }
+
+    .company {
+      color: #666;
+      font-size: 0.9rem;
+    }
 
     .job-details {
       display: none;
@@ -136,8 +141,15 @@
       color: #555;
     }
 
-    .job-details div { display: flex; align-items: center; gap: 10px; }
-    .job-details i { color: #005bbb; }
+    .job-details div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .job-details i {
+      color: #005bbb;
+    }
 
     .apply-btn {
       background: #00d37f;
@@ -148,42 +160,12 @@
       cursor: pointer;
       font-weight: bold;
     }
-    .apply-btn:hover { background: #00b666; }
 
-    /* Skill Bars */
-    .skill-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.85rem;
+    .apply-btn:hover {
+      background: #00b666;
     }
 
-    .skill-bar .bar-label { width: 80px; }
-    .skill-bar .bar-container {
-      flex: 1;
-      background: #e0e0e0;
-      height: 12px;
-      border-radius: 6px;
-      overflow: hidden;
-      position: relative;
-    }
-    .skill-bar .bar-fill {
-      height: 100%;
-      background: #005bbb;
-      border-radius: 6px 0 0 6px;
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-    .skill-bar .bar-percent { width: 40px; text-align: right; }
-
-    /* Resume upload styling */
-    .resume-upload {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    /* Resume */
     .resume-upload button {
       background: #005bbb;
       color: white;
@@ -194,9 +176,11 @@
       font-weight: bold;
     }
 
-    .resume-upload button:hover { background: #004499; }
+    .resume-upload button:hover {
+      background: #004499;
+    }
 
-    .resume-upload input[type="file"] {
+    input[type="file"] {
       display: none;
     }
 
@@ -205,7 +189,7 @@
       color: #666;
     }
 
-    /* Profile Card */
+    /* Profile */
     .profile-card {
       background: white;
       padding: 25px;
@@ -215,7 +199,6 @@
     }
 
     .form-group {
-      flex: 1;
       display: flex;
       flex-direction: column;
       margin-bottom: 18px;
@@ -255,24 +238,38 @@
     .save-btn:hover {
       background: #004999;
     }
-
   </style>
 </head>
+
 <body>
 
 <header>
   <div class="header-left">
     <a href="./index.html" class="logo">Interly</a>
+
     <div class="nav-top">
-      <div class="nav-item" onclick="showSection('jobs')"><i class="fas fa-briefcase"></i> Jobs</div>
-      <div class="nav-item" onclick="showSection('resume')"><i class="fas fa-file-alt"></i> Resume</div>
-      <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</div>
+      <div class="nav-item" onclick="showSection('jobs')">
+        <i class="fas fa-briefcase"></i> Jobs
+      </div>
+      <div class="nav-item" onclick="showSection('resume')">
+        <i class="fas fa-file-alt"></i> Resume
+      </div>
+      <div class="nav-item" onclick="showSection('profile')">
+        <i class="fas fa-user"></i> Profile
+      </div>
     </div>
   </div>
-  <a href="./index.html" class="logout">Logout</a>
+
+  <div class="header-right">
+    <button class="settings-btn" onclick="showSection('settings')">
+      <i class="fas fa-cog"></i> Settings
+    </button>
+    <a href="./index.html" class="logout">Logout</a>
+  </div>
 </header>
 
 <main>
+
   <!-- Jobs Section -->
   <div id="jobs" class="dashboard-section active">
     <h2>Available Computer Internships - Philadelphia, PA</h2>
@@ -280,63 +277,12 @@
     <div class="job-card" onclick="toggleDetails(this)">
       <div class="job-header">
         <h3>Software Engineering Intern</h3>
-        <span class="company">TechCorp / Software & IT · Early Stage</span>
+        <span class="company">TechCorp / Software & IT</span>
       </div>
       <div class="job-details">
-        <div><strong>Overview:</strong> Work on full-stack web applications, collaborate with engineers.</div>
+        <div><strong>Overview:</strong> Work on full-stack web applications.</div>
         <div><i class="fas fa-map-marker-alt"></i> Philadelphia, PA</div>
         <div><i class="fas fa-dollar-sign"></i> $25/hr - $40/hr</div>
-        <div><i class="fas fa-clock"></i> Full-time</div>
-        <div><i class="fas fa-home"></i> Onsite</div>
-
-        <div class="skill-bar">
-          <div class="bar-label">Experience</div>
-          <div class="bar-container"><div class="bar-fill" style="width: 70%;"></div></div>
-          <div class="bar-percent">70%</div>
-        </div>
-        <div class="skill-bar">
-          <div class="bar-label">Skill</div>
-          <div class="bar-container"><div class="bar-fill" style="width: 80%;"></div></div>
-          <div class="bar-percent">80%</div>
-        </div>
-        <div class="skill-bar">
-          <div class="bar-label">Industry</div>
-          <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
-          <div class="bar-percent">60%</div>
-        </div>
-
-        <button class="apply-btn">Apply Now</button>
-      </div>
-    </div>
-
-    <div class="job-card" onclick="toggleDetails(this)">
-      <div class="job-header">
-        <h3>Data Analyst Intern</h3>
-        <span class="company">DataWorks / Analytics · Late Stage</span>
-      </div>
-      <div class="job-details">
-        <div><strong>Overview:</strong> Analyze datasets, create dashboards, and report insights.</div>
-        <div><i class="fas fa-map-marker-alt"></i> Philadelphia, PA</div>
-        <div><i class="fas fa-dollar-sign"></i> $28/hr - $45/hr</div>
-        <div><i class="fas fa-clock"></i> Full-time</div>
-        <div><i class="fas fa-home"></i> Onsite</div>
-
-        <div class="skill-bar">
-          <div class="bar-label">Experience</div>
-          <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
-          <div class="bar-percent">60%</div>
-        </div>
-        <div class="skill-bar">
-          <div class="bar-label">Skill</div>
-          <div class="bar-container"><div class="bar-fill" style="width: 75%;"></div></div>
-          <div class="bar-percent">75%</div>
-        </div>
-        <div class="skill-bar">
-          <div class="bar-label">Industry</div>
-          <div class="bar-container"><div class="bar-fill" style="width: 50%;"></div></div>
-          <div class="bar-percent">50%</div>
-        </div>
-
         <button class="apply-btn">Apply Now</button>
       </div>
     </div>
@@ -345,92 +291,49 @@
   <!-- Resume Section -->
   <div id="resume" class="dashboard-section">
     <h2>Your Resume</h2>
-    <p>Upload or edit your resume here.</p>
     <div class="resume-upload">
       <button onclick="document.getElementById('resumeFile').click()">Upload Resume</button>
-      <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" />
-      <span class="file-note">File must be 5MB or else it won't work</span>
+      <input type="file" id="resumeFile" />
+      <span class="file-note">File must be under 5MB</span>
     </div>
   </div>
 
   <!-- Profile Section -->
   <div id="profile" class="dashboard-section">
     <h2>Your Profile</h2>
-
-    <div id="profileView" class="profile-card" style="display:none;">
-      <p><strong>Name:</strong> <span id="viewName"></span></p>
-      <p><strong>Major:</strong> <span id="viewMajor"></span></p>
-      <p><strong>Graduation Year:</strong> <span id="viewGrad"></span></p>
-      <p><strong>Email:</strong> <span id="viewEmail"></span></p>
-      <p><strong>Bio:</strong> <span id="viewBio"></span></p>
-      <button class="save-btn" onclick="switchToEdit()">Edit Profile</button>
+    <div class="profile-card">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email">
+      </div>
+      <button class="save-btn">Save Profile</button>
     </div>
+  </div>
 
-    <div id="profileEdit" class="profile-card">
-      <form id="profileForm">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input id="nameInput" type="text" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-          <label>Major / Program</label>
-          <input id="majorInput" type="text" placeholder="e.g., Computer Science">
-        </div>
-        <div class="form-group">
-          <label>Graduation Year</label>
-          <input id="gradInput" type="number" placeholder="2027">
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input id="emailInput" type="email" placeholder="you@example.com">
-        </div>
-        <div class="form-group">
-          <label>Short Bio</label>
-          <textarea id="bioInput" placeholder="Tell us a bit about yourself..."></textarea>
-        </div>
-        <button type="button" class="save-btn" onclick="saveProfile()">Save Profile</button>
-      </form>
-    </div>
+  <!-- Settings Section -->
+  <div id="settings" class="dashboard-section">
+    <h2>Settings</h2>
+    <p>Notifications, Preferences, and Account Settings will go here.</p>
   </div>
 
 </main>
 
-<script src="dashboard.js"></script>
 <script>
   function showSection(sectionId) {
-    document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
+    document.querySelectorAll('.dashboard-section')
+      .forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId)
+      .classList.add('active');
   }
 
   function toggleDetails(card) {
     const details = card.querySelector('.job-details');
-    details.style.display = (details.style.display === 'flex') ? 'none' : 'flex';
-  }
-
-  function saveProfile() {
-    const name = document.getElementById('nameInput').value;
-    const major = document.getElementById('majorInput').value;
-    const grad = document.getElementById('gradInput').value;
-    const email = document.getElementById('emailInput').value;
-    const bio = document.getElementById('bioInput').value;
-
-    document.getElementById('viewName').textContent = name;
-    document.getElementById('viewMajor').textContent = major;
-    document.getElementById('viewGrad').textContent = grad;
-    document.getElementById('viewEmail').textContent = email;
-    document.getElementById('viewBio').textContent = bio;
-
-    switchToView();
-  }
-
-  function switchToView() {
-    document.getElementById('profileEdit').style.display = 'none';
-    document.getElementById('profileView').style.display = 'block';
-  }
-
-  function switchToEdit() {
-    document.getElementById('profileView').style.display = 'none';
-    document.getElementById('profileEdit').style.display = 'block';
+    details.style.display =
+      details.style.display === 'flex' ? 'none' : 'flex';
   }
 </script>
 
