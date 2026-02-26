@@ -14,12 +14,29 @@
 
     /* Header */
     header {
-      background: #005bbb;
+      background: #07294D;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 15px 30px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem; /* Space between logo and nav items */
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+
+    .logo:hover {
+      text-decoration: underline;
     }
 
     .nav-top {
@@ -39,41 +56,10 @@
     .nav-item:hover {
       text-decoration: underline;
     }
-    .header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.settings-btn {
-  background: rgba(255,255,255,0.15);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.4);
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.2s;
-}
-
-.settings-btn:hover {
-  background: rgba(255,255,255,0.28);
-}
-
-
 
     .logout {
       background: #ffd500;
-      color: #005bbb;
+      color: #07294D;
       padding: 8px 12px;
       border-radius: 5px;
       text-decoration: none;
@@ -121,10 +107,7 @@
     }
 
     .job-details div { display: flex; align-items: center; gap: 10px; }
-
     .job-details i { color: #005bbb; }
-
-    .job-footer { margin-top: 10px; }
 
     .apply-btn {
       background: #00d37f;
@@ -135,7 +118,6 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     .apply-btn:hover { background: #00b666; }
 
     /* Skill Bars */
@@ -194,82 +176,74 @@
     }
 
     /* Profile Card */
-.profile-card {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  max-width: 650px;
-}
+    .profile-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 650px;
+    }
 
-.form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 18px;
-}
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+    }
 
-.form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
 
-.form-group label {
-  font-weight: bold;
-  margin-bottom: 6px;
-}
+    .form-group input,
+    .form-group textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
 
-.form-group input,
-.form-group textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-}
+    textarea {
+      height: 90px;
+      resize: none;
+    }
 
-textarea {
-  height: 90px;
-  resize: none;
-}
+    .save-btn {
+      width: 100%;
+      padding: 12px;
+      background: #005bbb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
 
-.file-note {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
-}
-
-.save-btn {
-  width: 100%;
-  padding: 12px;
-  background: #005bbb;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.save-btn:hover {
-  background: #004999;
-}
-
+    .save-btn:hover {
+      background: #004999;
+    }
 
   </style>
 </head>
 <body>
 
 <header>
-  <div class="nav-top">
-    <div class="nav-item" onclick="showSection('jobs')"><i class="fas fa-briefcase"></i> Jobs</div>
-    <div class="nav-item" onclick="showSection('resume')"><i class="fas fa-file-alt"></i> Resume</div>
-    <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</div>
+  <div class="header-left">
+    <a href="./index.html" class="logo">Interly</a>
+    <div class="nav-top">
+      <div class="nav-item" onclick="showSection('jobs')"><i class="fas fa-briefcase"></i> Jobs</div>
+      <div class="nav-item" onclick="showSection('resume')"><i class="fas fa-file-alt"></i> Resume</div>
+      <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</div>
+    </div>
   </div>
   <a href="./index.html" class="logout">Logout</a>
 </header>
 
 <main>
+  <!-- Jobs Section -->
   <div id="jobs" class="dashboard-section active">
     <h2>Available Computer Internships - Philadelphia, PA</h2>
 
@@ -290,13 +264,11 @@ textarea {
           <div class="bar-container"><div class="bar-fill" style="width: 70%;"></div></div>
           <div class="bar-percent">70%</div>
         </div>
-
         <div class="skill-bar">
           <div class="bar-label">Skill</div>
           <div class="bar-container"><div class="bar-fill" style="width: 80%;"></div></div>
           <div class="bar-percent">80%</div>
         </div>
-
         <div class="skill-bar">
           <div class="bar-label">Industry</div>
           <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
@@ -324,13 +296,11 @@ textarea {
           <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
           <div class="bar-percent">60%</div>
         </div>
-
         <div class="skill-bar">
           <div class="bar-label">Skill</div>
           <div class="bar-container"><div class="bar-fill" style="width: 75%;"></div></div>
           <div class="bar-percent">75%</div>
         </div>
-
         <div class="skill-bar">
           <div class="bar-label">Industry</div>
           <div class="bar-container"><div class="bar-fill" style="width: 50%;"></div></div>
@@ -340,11 +310,9 @@ textarea {
         <button class="apply-btn">Apply Now</button>
       </div>
     </div>
-
   </div>
 
-
-<script src="dashboard.js"></script>
+  <!-- Resume Section -->
   <div id="resume" class="dashboard-section">
     <h2>Your Resume</h2>
     <p>Upload or edit your resume here.</p>
@@ -354,59 +322,50 @@ textarea {
       <span class="file-note">File must be 5MB or else it won't work</span>
     </div>
   </div>
+
+  <!-- Profile Section -->
   <div id="profile" class="dashboard-section">
-  <h2>Your Profile</h2>
+    <h2>Your Profile</h2>
 
-  <div id="profileView" class="profile-card" style="display:none;">
-    <p><strong>Name:</strong> <span id="viewName"></span></p>
-    <p><strong>Major:</strong> <span id="viewMajor"></span></p>
-    <p><strong>Graduation Year:</strong> <span id="viewGrad"></span></p>
-    <p><strong>Email:</strong> <span id="viewEmail"></span></p>
-    <p><strong>Bio:</strong> <span id="viewBio"></span></p>
+    <div id="profileView" class="profile-card" style="display:none;">
+      <p><strong>Name:</strong> <span id="viewName"></span></p>
+      <p><strong>Major:</strong> <span id="viewMajor"></span></p>
+      <p><strong>Graduation Year:</strong> <span id="viewGrad"></span></p>
+      <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+      <p><strong>Bio:</strong> <span id="viewBio"></span></p>
+      <button class="save-btn" onclick="switchToEdit()">Edit Profile</button>
+    </div>
 
-    <button class="save-btn" onclick="switchToEdit()">Edit Profile</button>
+    <div id="profileEdit" class="profile-card">
+      <form id="profileForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input id="nameInput" type="text" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label>Major / Program</label>
+          <input id="majorInput" type="text" placeholder="e.g., Computer Science">
+        </div>
+        <div class="form-group">
+          <label>Graduation Year</label>
+          <input id="gradInput" type="number" placeholder="2027">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="emailInput" type="email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label>Short Bio</label>
+          <textarea id="bioInput" placeholder="Tell us a bit about yourself..."></textarea>
+        </div>
+        <button type="button" class="save-btn" onclick="saveProfile()">Save Profile</button>
+      </form>
+    </div>
   </div>
-
-  <!-- EDIT MODE -->
-  <div id="profileEdit" class="profile-card">
-    <form id="profileForm">
-
-      <div class="form-group">
-        <label>Full Name</label>
-        <input id="nameInput" type="text" placeholder="Enter your full name">
-      </div>
-
-      <div class="form-group">
-        <label>Major / Program</label>
-        <input id="majorInput" type="text" placeholder="e.g., Computer Science">
-      </div>
-
-      <div class="form-group">
-        <label>Graduation Year</label>
-        <input id="gradInput" type="number" placeholder="2027">
-      </div>
-
-      <div class="form-group">
-        <label>Email</label>
-        <input id="emailInput" type="email" placeholder="you@example.com">
-      </div>
-
-      <div class="form-group">
-        <label>Short Bio</label>
-        <textarea id="bioInput" placeholder="Tell us a bit about yourself..."></textarea>
-      </div>
-             
-      <button type="button" class="save-btn" onclick="saveProfile()">Save Profile</button>
-    </form>
-  </div>
-</div>
-  
-</div>
-
-  
 
 </main>
 
+<script src="dashboard.js"></script>
 <script>
   function showSection(sectionId) {
     document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
@@ -417,32 +376,32 @@ textarea {
     const details = card.querySelector('.job-details');
     details.style.display = (details.style.display === 'flex') ? 'none' : 'flex';
   }
+
   function saveProfile() {
-  const name = document.getElementById('nameInput').value;
-  const major = document.getElementById('majorInput').value;
-  const grad = document.getElementById('gradInput').value;
-  const email = document.getElementById('emailInput').value;
-  const bio = document.getElementById('bioInput').value;
+    const name = document.getElementById('nameInput').value;
+    const major = document.getElementById('majorInput').value;
+    const grad = document.getElementById('gradInput').value;
+    const email = document.getElementById('emailInput').value;
+    const bio = document.getElementById('bioInput').value;
 
-  document.getElementById('viewName').textContent = name;
-  document.getElementById('viewMajor').textContent = major;
-  document.getElementById('viewGrad').textContent = grad;
-  document.getElementById('viewEmail').textContent = email;
-  document.getElementById('viewBio').textContent = bio;
+    document.getElementById('viewName').textContent = name;
+    document.getElementById('viewMajor').textContent = major;
+    document.getElementById('viewGrad').textContent = grad;
+    document.getElementById('viewEmail').textContent = email;
+    document.getElementById('viewBio').textContent = bio;
 
-  switchToView();
-}
+    switchToView();
+  }
 
-function switchToView() {
-  document.getElementById('profileEdit').style.display = 'none';
-  document.getElementById('profileView').style.display = 'block';
-}
+  function switchToView() {
+    document.getElementById('profileEdit').style.display = 'none';
+    document.getElementById('profileView').style.display = 'block';
+  }
 
-function switchToEdit() {
-  document.getElementById('profileView').style.display = 'none';
-  document.getElementById('profileEdit').style.display = 'block';
-}
-
+  function switchToEdit() {
+    document.getElementById('profileView').style.display = 'none';
+    document.getElementById('profileEdit').style.display = 'block';
+  }
 </script>
 
 </body>

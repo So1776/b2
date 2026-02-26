@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ z<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -40,9 +40,8 @@
       transition: color 0.2s;
     }
 
-    /* Remove green hover */
     .logo:hover {
-      color: white;
+      color: #00d37f;
       text-decoration: underline;
     }
 
@@ -64,8 +63,8 @@
 
     /* Login button */
     .login {
-      background: #07294D;
-      color: #FFC600;
+      background: #FFC600;
+      color: #07294D;
       padding: 10px 15px;
       border-radius: 5px;
       text-decoration: none;
@@ -126,7 +125,7 @@
 
   <header>
     <div class="header-left">
-      <!-- Logo -->
+      <!-- Replaced text with logo -->
       <a href="./index.html" class="logo">Interly</a>
 
       <div class="nav-links">
@@ -137,7 +136,7 @@
       </div>
     </div>
 
-    <!-- Login button -->
+    <!-- Updated login button -->
     <a href="login.html" class="login">Login</a>
   </header>
 

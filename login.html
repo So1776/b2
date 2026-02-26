@@ -4,47 +4,69 @@
   <meta charset="UTF-8">
   <title>Login - Internship Tracker</title>
 
+  <!-- Font Awesome for eye icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      background: linear-gradient(135deg, #07294D, #FFC600);
       color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
+    /* Header */
     header {
-      background: #dcdcdc;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #07294D;
       padding: 20px;
       border-bottom: 1px solid #aaa;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
+      z-index: 10;
     }
 
-    header strong {
-      font-size: 1.8rem;
-    }
-
-    nav a {
-      margin-left: 1.5rem;
+    /* Interly logo */
+    .logo {
+      font-size: 1.5rem;
       font-weight: bold;
+      color: white;          
       text-decoration: none;
-      color: #333;
+      cursor: pointer;
+      transition: none;
     }
 
+    .logo:hover {
+      color: white;
+      text-decoration: none;
+    }
+
+    /* Form section */
     .form-section {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 100px);
-      padding: 0 20px;
       text-align: center;
+
+      /* Animation */
+      opacity: 0;
+      transform: translateY(50px);
+      animation: slideUpFade 1s ease forwards;
     }
 
     .form-section h2 {
       font-size: 2rem;
       margin-bottom: 1.5rem;
+      color: #07294D;
     }
 
     form {
@@ -54,7 +76,7 @@
       background: #fff;
       padding: 30px 40px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       width: 100%;
       max-width: 400px;
     }
@@ -100,6 +122,7 @@
       right: 10px;
       cursor: pointer;
       font-size: 1.1rem;
+      color: #555;
       user-select: none;
     }
 
@@ -118,9 +141,10 @@
       text-decoration: underline;
     }
 
+    /* Login Button */
     button {
       padding: 10px;
-      background: #007BFF;
+      background: #07294D;
       color: white;
       font-weight: bold;
       border: none;
@@ -128,10 +152,11 @@
       cursor: pointer;
       font-size: 1rem;
       margin-top: 15px;
+      transition: background 0.3s;
     }
 
     button:hover {
-      background: #0056b3;
+      background: #034172;
     }
 
     footer {
@@ -140,25 +165,30 @@
       border-top: 1px solid #aaa;
       text-align: center;
     }
+
+    /* Animation Keyframes */
+    @keyframes slideUpFade {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
-
 <body>
 
 <header>
-  <div><strong>Internship Tracker</strong></div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="#">Our Mission</a>
-    <a href="#">Find Internships</a>
-  </nav>
+  <a href="./index.html" class="logo">Interly</a>
 </header>
 
 <section class="form-section">
   <h2>Log In</h2>
 
   <form id="loginForm">
-
     <label for="email">Email Address:</label>
     <input type="email" id="email" name="email">
     <span class="error-message" id="emailError"></span>
@@ -166,7 +196,9 @@
     <label for="password">Password:</label>
     <div class="password-container">
       <input type="password" id="password" name="password">
-      <span id="togglePassword" class="eye">👁</span>
+      <span id="togglePassword" class="eye">
+        <i class="fa-solid fa-eye"></i>
+      </span>
     </div>
     <span class="error-message" id="passwordError"></span>
 
@@ -186,12 +218,14 @@
   const emailError = document.getElementById("emailError");
   const passwordError = document.getElementById("passwordError");
   const togglePassword = document.getElementById("togglePassword");
+  const eyeIcon = togglePassword.querySelector("i");
 
   // Toggle password visibility
   togglePassword.addEventListener("click", function () {
     const isPassword = passwordInput.getAttribute("type") === "password";
     passwordInput.setAttribute("type", isPassword ? "text" : "password");
-    togglePassword.textContent = isPassword ? "🙈" : "👁";
+    eyeIcon.classList.toggle("fa-eye");
+    eyeIcon.classList.toggle("fa-eye-slash");
   });
 
   // Handle form submission
@@ -200,20 +234,17 @@
 
     let isValid = true;
 
-    // Reset previous errors
     emailInput.classList.remove("error");
     passwordInput.classList.remove("error");
     emailError.textContent = "";
     passwordError.textContent = "";
 
-    // Email validation
     if (emailInput.value.trim() === "") {
       emailInput.classList.add("error");
       emailError.textContent = "Please enter your email.";
       isValid = false;
     }
 
-    // Password validation
     if (passwordInput.value.trim() === "") {
       passwordInput.classList.add("error");
       passwordError.textContent = "Please enter your password.";
@@ -221,35 +252,30 @@
     }
 
     if (isValid) {
-  try {
-    // Send login request to backend
-    const res = await fetch("/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: emailInput.value.trim(),
-        password: passwordInput.value.trim()
-      })
-    });
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: emailInput.value.trim(),
+            password: passwordInput.value.trim()
+          })
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (!res.ok) {
-      // show backend error (ex: Invalid email or password)
-      passwordInput.classList.add("error");
-      passwordError.textContent = data.error || "Login failed.";
-      return; // IMPORTANT: stop redirect
+        if (!res.ok) {
+          passwordInput.classList.add("error");
+          passwordError.textContent = data.error || "Login failed.";
+          return;
+        }
+
+        localStorage.setItem("token", data.token);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        passwordError.textContent = "Server error. Try again.";
+      }
     }
-
-    // store token so future requests can be authenticated
-    localStorage.setItem("token", data.token);
-
-    // Redirect on real success
-    window.location.href = "dashboard.html";
-  } catch (err) {
-    passwordError.textContent = "Server error. Try again.";
-  }
-}
   });
 </script>
 
