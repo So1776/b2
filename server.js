@@ -232,7 +232,7 @@ app.use((err, req, res, next) => {
 });
 
 // calling internship data from serpapi
-app.get("/api/internships", async (req, res) => {
+app.get("/api/internships", async (req, res) => { 
   const query = req.query.q || "software engineering internship";
 
   try {
@@ -254,4 +254,4 @@ app.get("/api/internships", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-});
+}); 

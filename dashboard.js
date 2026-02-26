@@ -1,7 +1,7 @@
 // dashboard.js
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("internship-list");
-  
+  const container = document.getElementById("jobs-container");
+
   fetch("/api/internships")
     .then(res => res.json())
     .then(internships => {
@@ -9,12 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
         container.innerHTML = "<p>No internships found.</p>";
         return;
       }
-      
+
       container.innerHTML = internships.map(job => `
         <div class="job-card">
-          <h3>${job.title}</h3>
-          <p>${job.company_name}</p>
-          <a href="${job.link}" target="_blank">Apply</a>
+          <h3>${job.title || "Untitled Role"}</h3>
+          <p class="company">${job.company_name || "Unknown Company"}</p>
+          <a href="${job.link}" target="_blank" class="apply-btn">Apply</a>
         </div>
       `).join("");
     })
