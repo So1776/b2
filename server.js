@@ -16,6 +16,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/profile_pics")));
 
 // --- Database setup ---
 const dbPath = path.join(__dirname, "database.sqlite");
@@ -69,6 +70,13 @@ db.serialize(() => {
 });
 
 const uploadDir = path.join(__dirname, "uploads/resumes");
+// --- Profile picture upload directory ---
+const profilePicDir = path.join(__dirname, "uploads/profile_pics");
+if (!fs.existsSync(profilePicDir)) {
+  fs.mkdirSync(profilePicDir, { recursive: true });
+  console.log("✅ Created profile_pics directory");
+}
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
   console.log("Created uploads directory");
@@ -102,6 +110,29 @@ const upload = multer({
   fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
+// --- Multer config for profile pictures ---
+const profilePicStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/profile_pics"),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `profile_${Date.now()}${ext}`);
+  },
+});
+
+function profilePicFilter(req, file, cb) {
+  const allowed = ["image/jpeg", "image/png", "image/jpg"];
+  if (!allowed.includes(file.mimetype)) {
+    return cb(new Error("Only JPG or PNG images allowed"));
+  }
+  cb(null, true);
+}
+
+const uploadProfilePic = multer({
+  storage: profilePicStorage,
+  fileFilter: profilePicFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+});
+
 
 // --- Routes ---
 app.get("/health", (req, res) => {
@@ -109,8 +140,9 @@ app.get("/health", (req, res) => {
 });
 
 // SIGNUP: creates a user account
-app.post("/signup", async (req, res) => {
+app.post("/signup", uploadProfilePic.single("profilePic"), async (req, res) => {
   const { name, email, password } = req.body;
+  const profilePicPath = req.file ? `/uploads/profile_pics/${req.file.filename}` : null;
 
   if (!name || !email || !password) {
     return res.status(400).json({ error: "name, email, and password are required" });
@@ -120,8 +152,8 @@ app.post("/signup", async (req, res) => {
     const password_hash = await bcrypt.hash(password, 10);
 
     db.run(
-      `INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)`,
-      [name, email, password_hash],
+      INSERT INTO users (name, email, password_hash, profile_picture) VALUES (?, ?, ?, ?)
+      [name, email, password_hash, profilePicPath],
       function (err) {
         if (err) {
           return res.status(400).json({ error: "Email already in use" });
