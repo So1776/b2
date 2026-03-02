@@ -221,6 +221,7 @@
       font-size: 0.85rem;
       color: #666;
     }
+    
 
     /* Profile */
     .profile-card {
@@ -456,16 +457,27 @@
     </div>
   </div>
 
-  <!-- Resume Section -->
-  <div id="resume" class="dashboard-section">
-    <h2>Your Resume</h2>
-    <p>Upload or edit your resume here.</p>
-    <div class="resume-upload">
-      <button onclick="document.getElementById('resumeFile').click()">Upload Resume</button>
-      <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" />
-      <span class="file-note">File must be 5MB or less to upload successfully.</span>
-    </div>
+ <!-- Resume Section -->
+<div id="resume" class="dashboard-section">
+  <h2>Your Resume</h2>
+  <p>Upload or edit your resume here.</p>
+
+  <div class="resume-upload">
+    <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" />
+
+    <!-- upload/update button -->
+    <button type="button" id="resumeBtn">
+      <span id="resumeBtnIcon">⬆️</span>
+      <span id="resumeBtnText">Upload Resume</span>
+    </button>
+
+    <!-- clickable filename (shows after selecting a file) -->
+    <a href="#" id="fileNameLink" class="file-note" style="display:none;"></a>
+
+    <!-- helper note -->
+    <div class="file-note" id="fileNote">File must be 5MB or less to upload successfully.</div>
   </div>
+</div>
 
   <!-- Profile Section -->
   <div id="profile" class="dashboard-section">
@@ -606,7 +618,79 @@
     document.getElementById('profileView').style.display = 'none';
     document.getElementById('profileEdit').style.display = 'block';
   }
-</script>
 
+   // Resume upload UI behavior (show file name + change button + preview PDF/TXT)
+
+const resumeFileInput = document.getElementById("resumeFile");
+const resumeBtn = document.getElementById("resumeBtn");
+const resumeBtnIcon = document.getElementById("resumeBtnIcon");
+const resumeBtnText = document.getElementById("resumeBtnText");
+const fileNameLink = document.getElementById("fileNameLink");
+
+let selectedFileUrl = null;
+
+function cleanupPreviewUrl() {
+  if (selectedFileUrl) {
+    URL.revokeObjectURL(selectedFileUrl);
+    selectedFileUrl = null;
+  }
+}
+
+function resetResumeUI() {
+  cleanupPreviewUrl();
+
+  resumeBtnIcon.textContent = "⬆️";
+  resumeBtnText.textContent = "Upload Resume";
+
+  fileNameLink.textContent = "";
+  fileNameLink.href = "#";
+  fileNameLink.style.display = "none";
+  fileNameLink.removeAttribute("target");
+  fileNameLink.removeAttribute("rel");
+  fileNameLink.onclick = (e) => e.preventDefault();
+}
+
+if (resumeFileInput && resumeBtn && resumeBtnIcon && resumeBtnText && fileNameLink) {
+  resetResumeUI();
+
+  // Click button -> open file picker
+  resumeBtn.addEventListener("click", () => {
+    resumeFileInput.click();
+  });
+
+  // Pick file -> update UI + set preview link
+  resumeFileInput.addEventListener("change", () => {
+    const file = resumeFileInput.files?.[0];
+    resetResumeUI();
+    if (!file) return;
+
+    // update button
+    resumeBtnIcon.textContent = "📄";
+    resumeBtnText.textContent = "Update Resume";
+
+    // show filename
+    fileNameLink.textContent = file.name;
+    fileNameLink.style.display = "inline-block";
+
+    const ext = (file.name.split(".").pop() || "").toLowerCase();
+    const canPreview = ext === "pdf" || ext === "txt";
+
+    if (canPreview) {
+      selectedFileUrl = URL.createObjectURL(file);
+      fileNameLink.href = selectedFileUrl;
+      fileNameLink.target = "_blank";
+      fileNameLink.rel = "noopener noreferrer";
+      fileNameLink.onclick = null;
+    } else {
+      fileNameLink.onclick = (e) => {
+        e.preventDefault();
+        alert("Preview works for PDF/TXT only. DOC/DOCX needs backend preview/download.");
+      };
+    }
+  });
+
+  window.addEventListener("beforeunload", cleanupPreviewUrl);
+}
+</script>
 </body>
 </html>

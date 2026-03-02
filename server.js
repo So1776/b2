@@ -152,15 +152,16 @@ app.post("/signup", uploadProfilePic.single("profilePic"), async (req, res) => {
     const password_hash = await bcrypt.hash(password, 10);
 
     db.run(
-      INSERT INTO users (name, email, password_hash, profile_picture) VALUES (?, ?, ?, ?)
-      [name, email, password_hash, profilePicPath],
-      function (err) {
-        if (err) {
-          return res.status(400).json({ error: "Email already in use" });
-        }
-        return res.status(201).json({ message: "User created", user_id: this.lastID });
-      }
-    );
+  `INSERT INTO users (name, email, password_hash, profile_picture)
+   VALUES (?, ?, ?, ?)`,
+  [name, email, password_hash, profilePicPath],
+  function (err) {
+    if (err) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+    return res.status(201).json({ message: "User created", user_id: this.lastID });
+  }
+);
   } catch (e) {
     return res.status(500).json({ error: "Server error" });
   }
@@ -262,6 +263,24 @@ app.delete("/resume", requireAuth, (req, res) => {
       });
     }
   );
+});
+
+// STEP 1: Update/replace resume (just confirm request + file arrives)
+app.put("/resume", requireAuth, upload.single("resume"), (req, res) => {
+  console.log("PUT /resume hit");
+  console.log("user:", req.user);      // should contain user_id from JWT
+  console.log("file:", req.file);      // should contain uploaded file metadata
+
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  return res.status(200).json({
+    message: "Resume received (step 1 ok)",
+    filename: req.file.originalname,
+    storedAs: req.file.filename,
+    size: req.file.size,
+  });
 });
 
 // Simple protected resume upload route
