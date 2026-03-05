@@ -44,6 +44,21 @@
       text-decoration: none;
     }
 
+    .login-btn {
+      background-color: #FFC600;
+      color: #07294D;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .login-btn:hover {
+      background-color: #e6b800; /* slightly darker yellow on hover */
+      color: #07294D;
+    }
+
     .form-section {
       display: flex;
       justify-content: center;
@@ -139,7 +154,8 @@
 <body>
 
 <header>
-  <a href="./index.html" class="logo">Interly</a>
+  <a href="./index.html" class="logo">Internly</a>
+  <a href="./login.html" class="login-btn">Login</a>
 </header>
 
 <section class="form-section">
@@ -189,11 +205,11 @@
       <option>2030</option>
     </select>
     <div class="error-message" id="gradyearError">Please select a year.</div>
+
     <label for="profilePic">Profile Picture</label>
     <input type="file" id="profilePic" name="profilePic" accept="image/*">
     <img id="profilePicPreview" style="width:120px; height:120px; border-radius:50%; object-fit:cover; display:none;">
-    
-     
+
     <button type="submit">Create Account</button>
 
   </form>
@@ -374,6 +390,7 @@
 
   });
 </script>
+
 <script>
 document.getElementById("profilePic").addEventListener("change", function(e) {
     const file = e.target.files[0];
