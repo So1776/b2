@@ -1,4 +1,4 @@
-// dashboard.js
+// Kamola's code
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("internship-list");
   
