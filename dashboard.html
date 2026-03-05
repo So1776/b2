@@ -395,7 +395,7 @@
   <!-- Jobs Section -->
   <div id="jobs" class="dashboard-section active">
     <h2>Available Computer Internships - Philadelphia, PA</h2>
-
+    <div id="banner-container"></div>
     <div class="job-card" onclick="toggleDetails(this)">
       <div class="job-header">
         <h3>Software Engineering Intern</h3>
@@ -586,6 +586,7 @@
 </main>
 
 <script src="dashboard.js"></script>
+<script src="deadline.js"></script>
 <script>
   function showSection(sectionId) {
     document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
@@ -694,6 +695,15 @@ if (resumeFileInput && resumeBtn && resumeBtnIcon && resumeBtnText && fileNameLi
   });
 
   window.addEventListener("beforeunload", cleanupPreviewUrl);
+  fetch('/api/internships?q=software+engineering+internship+philadelphia')
+    .then(res => res.json())
+    .then(jobs => {
+      const deadline = jobs?.[0]?.detected_extensions?.posted_at || "2026-04-01";
+      DeadlineBanner.init({ deadline });
+    })
+    .catch(() => {
+      DeadlineBanner.init({ deadline: "2026-04-01" });
+    });
 }
 </script>
 </body>
