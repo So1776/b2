@@ -362,6 +362,74 @@
     .danger-btn:hover {
       background: #c62828;
     }
+
+    /* Search Bar */
+    .search-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    .search-bar-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-bar-wrapper i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    #jobSearchInput {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #jobSearchInput:focus {
+      border-color: #005bbb;
+      box-shadow: 0 0 0 3px rgba(0, 91, 187, 0.12);
+    }
+
+    #jobSearchInput::placeholder {
+      color: #aaa;
+    }
+
+    .search-clear-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888;
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      transition: color 0.2s;
+      display: none;
+    }
+
+    .search-clear-btn:hover {
+      color: #333;
+    }
+
+    .no-results-msg {
+      display: none;
+      color: #888;
+      font-style: italic;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
@@ -395,6 +463,14 @@
   <!-- Jobs Section -->
   <div id="jobs" class="dashboard-section active">
     <h2>Available Computer Internships - Philadelphia, PA</h2>
+    <div class="search-bar-container">
+      <div class="search-bar-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="jobSearchInput" placeholder="Search internships..." aria-label="Search internships" />
+      </div>
+      <button class="search-clear-btn" id="searchClearBtn" onclick="clearJobSearch()">Clear</button>
+    </div>
+    <p class="no-results-msg" id="noResultsMsg">No internships match your search.</p>
     <div id="banner-container"></div>
     <div class="job-card" onclick="toggleDetails(this)">
       <div class="job-header">
@@ -597,6 +673,43 @@
     const details = card.querySelector('.job-details');
     details.style.display = (details.style.display === 'flex') ? 'none' : 'flex';
   }
+
+  // --- Job Search ---
+  const jobSearchInput = document.getElementById('jobSearchInput');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  const noResultsMsg = document.getElementById('noResultsMsg');
+
+  function filterJobs(query) {
+    const cards = document.querySelectorAll('#jobs .job-card');
+    const q = query.trim().toLowerCase();
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+        // Collapse hidden cards
+        const details = card.querySelector('.job-details');
+        if (details) details.style.display = 'none';
+      }
+    });
+
+    noResultsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+    searchClearBtn.style.display = q ? 'inline-block' : 'none';
+  }
+
+  function clearJobSearch() {
+    jobSearchInput.value = '';
+    filterJobs('');
+    jobSearchInput.focus();
+  }
+
+  jobSearchInput.addEventListener('input', function () {
+    filterJobs(this.value);
+  });
 
   function saveProfile() {
     const name = document.getElementById('nameInput').value;
