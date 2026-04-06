@@ -341,3 +341,29 @@ app.get("/api/internships", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// Delete user account
+app.delete("/account", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+
+  // First delete resume file if exists
+  db.get("SELECT upload_path FROM resumes WHERE user_id = ?", [userId], async (err, row) => {
+    if (row && row.upload_path) {
+      try {
+        await fs.promises.unlink(row.upload_path);
+      } catch (e) {
+        console.warn("File already missing");
+      }
+    }
+
+    // Delete resume record
+    db.run("DELETE FROM resumes WHERE user_id = ?", [userId]);
+
+    // Delete user
+    db.run("DELETE FROM users WHERE id = ?", [userId], function (err) {
+      if (err) return res.status(500).json({ error: "Database error" });
+
+      return res.json({ message: "Account deleted" });
+    });
+  });
+});

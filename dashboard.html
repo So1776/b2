@@ -363,6 +363,37 @@
       background: #c62828;
     }
 
+    /* modal */
+    .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.close-btn {
+  align-self: flex-end;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
     /* Search Bar */
     .search-bar-container {
       display: flex;
@@ -596,66 +627,75 @@
     </div>
   </div>
 
-  <!-- Settings Section -->
-  <div id="settings" class="dashboard-section">
-    <h2>Settings</h2>
-    <div class="profile-card">
+ <!-- Settings Section -->
+<div id="settings" class="dashboard-section">
+  <h2>Settings</h2>
+  <div class="profile-card">
 
-      <!-- Notifications -->
-      <div class="settings-group">
-        <h3><i class="fas fa-bell"></i> Notifications</h3>
-        <div class="settings-row">
-          <label>Email Notifications</label>
-          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-        </div>
-        <div class="settings-row">
-          <label>New Job Alerts</label>
-          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-        </div>
-        <div class="settings-row">
-          <label>Application Status Updates</label>
-          <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
-        </div>
+    <!-- Notifications -->
+    <div class="settings-group">
+      <h3><i class="fas fa-bell"></i> Notifications</h3>
+      <div class="settings-row">
+        <label>Email Notifications</label>
+        <label class="toggle">
+          <input type="checkbox" id="emailNotifications" checked>
+          <span class="toggle-slider"></span>
+        </label>
       </div>
-
-      <!-- Preferences -->
-      <div class="settings-group">
-        <h3><i class="fas fa-sliders-h"></i> Preferences</h3>
-        <div class="settings-row">
-          <label>Job Type</label>
-          <select class="settings-select">
-            <option>Full-time</option>
-            <option>Part-time</option>
-            <option>Remote</option>
-            <option>Hybrid</option>
-          </select>
-        </div>
-        <div class="settings-row">
-          <label>Location</label>
-          <select class="settings-select">
-            <option>Philadelphia, PA</option>
-            <option>New York, NY</option>
-            <option>Remote</option>
-          </select>
-        </div>
+      <div class="settings-row">
+        <label>New Job Alerts</label>
+        <label class="toggle">
+          <input type="checkbox" id="newJobAlerts" checked>
+          <span class="toggle-slider"></span>
+        </label>
       </div>
-
-      <!-- Account -->
-      <div class="settings-group">
-        <h3><i class="fas fa-user-shield"></i> Account</h3>
-        
-        <!-- Simran's Code -->
-        <div class="settings-row">
-          <label>Change Password</label>
-          <button class="save-btn" style="width:auto; padding: 8px 16px; margin-top:0;">Update</button>
-        </div>
-        <div class="settings-row">
-          <label>Delete Account</label>
-          <button class="danger-btn">Delete</button>
-        </div>
+      <div class="settings-row">
+        <label>Application Status Updates</label>
+        <label class="toggle">
+          <input type="checkbox" id="applicationStatusUpdates">
+          <span class="toggle-slider"></span>
+        </label>
       </div>
-     
+    </div>
 
+    <!-- Preferences -->
+    <div class="settings-group">
+      <h3><i class="fas fa-sliders-h"></i> Preferences</h3>
+      <div class="settings-row">
+        <label>Job Type</label>
+        <select class="settings-select" id="jobType">
+          <option>Full-time</option>
+          <option>Part-time</option>
+          <option>Remote</option>
+          <option>Hybrid</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Location</label>
+        <select class="settings-select" id="location">
+          <option>Philadelphia, PA</option>
+          <option>New York, NY</option>
+          <option>Remote</option>
+        </select>
+      </div>
+    </div>
+<div class="settings-row">
+  <button id="saveSettingsBtn" class="save-btn" style="width:auto; padding: 8px 16px;">
+    Save Settings
+  </button>
+</div>
+    <!-- Account -->
+    <div class="settings-group">
+      <h3><i class="fas fa-user-shield"></i> Account</h3>
+      <div class="settings-row">
+        <label>Change Password</label>
+        <button id="updatePasswordBtn" class="save-btn" style="width:auto; padding: 8px 16px; margin-top:0;">Update</button>
+      </div>
+      <div class="settings-row">
+        <label>Delete Account</label>
+        <button id="deleteAccountBtn" class="danger-btn">Delete</button>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -818,6 +858,153 @@ if (resumeFileInput && resumeBtn && resumeBtnIcon && resumeBtnText && fileNameLi
       DeadlineBanner.init({ deadline: "2026-04-01" });
     });
 }
+
+// Settings Save Button actually collects values 
+const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+
+if (saveSettingsBtn) {
+  saveSettingsBtn.addEventListener("click", () => {
+    const settingsData = {
+      emailNotifications: document.getElementById("emailNotifications").checked,
+      newJobAlerts: document.getElementById("newJobAlerts").checked,
+      applicationStatusUpdates: document.getElementById("applicationStatusUpdates").checked,
+      jobType: document.getElementById("jobType").value,
+      location: document.getElementById("location").value
+    };
+
+    console.log("Settings collected:", settingsData);
+  });
+}
+
+// Change Password button opens modal
+const updatePasswordBtn = document.getElementById("updatePasswordBtn");
+const changePasswordModal = document.getElementById("changePasswordModal");
+const closePasswordModal = document.getElementById("closePasswordModal");
+
+if (updatePasswordBtn && changePasswordModal && closePasswordModal) {
+  updatePasswordBtn.addEventListener("click", () => {
+    changePasswordModal.style.display = "flex";
+  });
+
+  closePasswordModal.addEventListener("click", () => {
+    changePasswordModal.style.display = "none";
+  });
+}
+
+// Handle open and closing of modal
+document.addEventListener("DOMContentLoaded", () => {
+
+  const updatePasswordBtn = document.getElementById("updatePasswordBtn");
+  const changePasswordModal = document.getElementById("changePasswordModal");
+  const closePasswordModal = document.getElementById("closePasswordModal");
+
+  if (updatePasswordBtn && changePasswordModal && closePasswordModal) {
+    updatePasswordBtn.addEventListener("click", () => {
+      changePasswordModal.style.display = "flex";
+    });
+
+    closePasswordModal.addEventListener("click", () => {
+      changePasswordModal.style.display = "none";
+    });
+  }
+
+  // Delete Account modal behavior
+const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+const deleteAccountModal = document.getElementById("deleteAccountModal");
+const closeDeleteModal = document.getElementById("closeDeleteModal");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+if (deleteAccountBtn && deleteAccountModal) {
+  deleteAccountBtn.addEventListener("click", () => {
+    deleteAccountModal.style.display = "flex";
+  });
+
+  if (closeDeleteModal) {
+    closeDeleteModal.addEventListener("click", () => {
+      deleteAccountModal.style.display = "none";
+    });
+  }
+
+  if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener("click", () => {
+      deleteAccountModal.style.display = "none";
+    });
+  }
+}
+
+// Confirmation for account deletion
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+
+if (confirmDeleteBtn) {
+  confirmDeleteBtn.addEventListener("click", async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("/account", {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Failed to delete account");
+        return;
+      }
+
+      alert("Account deleted");
+
+      // Clear token + redirect
+      localStorage.removeItem("token");
+      window.location.href = "/login.html";
+
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Something went wrong");
+    }
+  });
+}
+});
+
 </script>
+<!-- Change Password Modal -->
+<div id="changePasswordModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span id="closePasswordModal" class="close-btn">&times;</span>
+    <h3>Change Password</h3>
+
+    <label for="currentPassword">Current Password</label>
+    <input type="password" id="currentPassword" />
+
+    <label for="newPassword">New Password</label>
+    <input type="password" id="newPassword" />
+
+    <label for="confirmNewPassword">Confirm New Password</label>
+    <input type="password" id="confirmNewPassword" />
+
+    <button id="savePasswordBtn" class="save-btn">Save</button>
+  </div>
+</div>
+
+<!-- Delete Account Confirmation Modal -->
+<div id="deleteAccountModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span id="closeDeleteModal" class="close-btn">&times;</span>
+    
+    <h3>Delete Account</h3>
+    <p>Are you sure you want to delete your account?</p>
+
+    <div style="display:flex; justify-content: flex-end; gap:10px; margin-top: 15px;">
+      <button id="cancelDeleteBtn" class="save-btn" style="background:#ccc; color:#333;">
+        No
+      </button>
+      <button id="confirmDeleteBtn" class="danger-btn">
+        Yes
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
