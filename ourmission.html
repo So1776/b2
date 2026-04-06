@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Internly</title>
+  <title>Our Mission - Internly</title>
 
   <style>
     body {
@@ -13,6 +13,7 @@
       background: #f9f9f9;
     }
 
+    /* CANVAS BACKGROUND (ANIMATION) */
     canvas {
       position: fixed;
       top: 0;
@@ -22,6 +23,7 @@
       z-index: -1;
     }
 
+    /* HEADER */
     header {
       background: linear-gradient(90deg, #07294D, #FFC600);
       padding: 20px;
@@ -37,30 +39,15 @@
       gap: 2rem;
     }
 
-    /* ✅ UPDATED LOGO WITH ANIMATED UNDERLINE */
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
       color: white;
       text-decoration: none;
-      position: relative;
-      display: inline-block;
-      padding-bottom: 4px;
     }
 
-    .logo::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0%;
-      height: 2px;
-      background: white;
-      transition: width 0.3s ease;
-    }
-
-    .logo:hover::after {
-      width: 100%;
+    .logo:hover {
+      text-decoration: underline;
     }
 
     .nav-links {
@@ -69,23 +56,15 @@
       font-weight: bold;
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-links span {
       color: white;
       text-decoration: none;
       cursor: pointer;
       transition: 0.3s;
     }
 
-    .nav-links a:hover {
-      text-decoration: underline;
-    }
-
-    .nav-links span {
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
+    .nav-links a:hover,
     .nav-links span:hover {
       text-decoration: underline;
     }
@@ -99,6 +78,7 @@
       font-weight: bold;
     }
 
+    /* CENTER CONTENT */
     main {
       display: flex;
       flex-direction: column;
@@ -109,17 +89,26 @@
       padding: 0 20px;
     }
 
-    main h2, main p {
+    /* ANIMATION FROM INDEX */
+    main h1,
+    main p {
       opacity: 0;
       transform: translateY(50px);
       animation: riseUp 1s forwards;
+    }
+
+    main h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #07294D;
     }
 
     main p {
       animation-delay: 0.3s;
       font-size: 1.2rem;
       color: #555;
-      max-width: 600px;
+      max-width: 650px;
+      line-height: 1.6;
     }
 
     @keyframes riseUp {
@@ -128,22 +117,12 @@
         transform: translateY(0);
       }
     }
-
-    main h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    footer {
-      background: #dcdcdc;
-      padding: 20px;
-      text-align: center;
-    }
   </style>
 </head>
 
 <body>
 
+<!-- BACKGROUND ANIMATION -->
 <canvas id="network"></canvas>
 
 <script>
@@ -197,10 +176,10 @@ draw();
 
 <header>
   <div class="header-left">
-    <a href="./index.html" class="logo">Internly</a>
+    <a href="index.html" class="logo">Internly</a>
 
     <div class="nav-links">
-      <a href="ourmission.html">Our Mission</a>
+      <span>Our Mission</span>
       <span>Find Internships</span>
       <span>Track Your Progress</span>
       <span>About Us</span>
@@ -211,13 +190,13 @@ draw();
 </header>
 
 <main>
-  <h2>Simplify and organize your internship search</h2>
-  <p>Discover real-time internships and track your applications with ease</p>
+  <h1>Our Mission</h1>
+  <p>
+    Internly is built to simplify the internship search process.
+    We help students discover opportunities, organize applications,
+    and track progress all in one place.
+  </p>
 </main>
-
-<footer>
-  <p></p>
-</footer>
 
 </body>
 </html>

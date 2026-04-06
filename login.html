@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Login - Internship Tracker</title>
 
-  <!-- Font Awesome for eye icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
@@ -12,88 +11,172 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #07294D, #FFC600);
-      color: #333;
+
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
 
-    /* Header */
+    /* HEADER */
     header {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       background: #07294D;
-      padding: 20px;
-      border-bottom: 1px solid #aaa;
+      padding: 18px 25px;
       display: flex;
-      justify-content: flex-start;
       align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
       z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
 
-    /* Interly logo */
+    /* 🔥 HOVER WHITE LINE EFFECT */
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
-      color: white;          
-      text-decoration: none;
-      cursor: pointer;
-      transition: none;
-    }
-
-    .logo:hover {
       color: white;
       text-decoration: none;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 3px;
     }
 
-    /* Form section */
-    .form-section {
+    .logo::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background: white;
+      transition: width 0.3s ease;
+    }
+
+    .logo:hover::after {
+      width: 100%;
+    }
+
+    /* wrapper */
+    .page-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 90px;
+    }
+
+    /* 🔥 ANIMATED LOGIN CARD */
+    .login-card {
+      background: white;
+      width: 900px;
+      max-width: 95%;
+      height: 500px;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      display: flex;
+      overflow: hidden;
+
+      /* animation */
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      animation: cardIn 0.8s ease forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* hover lift effect */
+    .login-card:hover {
+      transform: translateY(-5px) scale(1);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+
+    @keyframes cardIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* LEFT SIDE */
+    .left-side {
+      width: 40%;
+      background: #07294D;
+      color: white;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-
-      /* Animation */
-      opacity: 0;
-      transform: translateY(50px);
-      animation: slideUpFade 1s ease forwards;
+      padding: 30px;
     }
 
-    .form-section h2 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
+    .i-logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      width: 70px;
+      height: 70px;
+      background: white;
       color: #07294D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .left-side p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* RIGHT SIDE */
+    .right-side {
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #07294D;
+      margin-bottom: 20px;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      gap: 10px;
       width: 100%;
-      max-width: 400px;
     }
 
     label {
-      text-align: left;
       font-weight: bold;
-      margin-top: 10px;
+      text-align: left;
     }
 
     input {
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #aaa;
       border-radius: 5px;
       font-size: 1rem;
       width: 100%;
       box-sizing: border-box;
+    }
+
+    .password-container {
+      position: relative;
+      display: flex;
+      width: 100%;
+    }
+
+    .eye {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #555;
     }
 
     input.error {
@@ -103,31 +186,26 @@
     .error-message {
       color: red;
       font-size: 0.85rem;
-      text-align: left;
-      height: 16px;
+      height: 14px;
     }
 
-    .password-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .password-container input {
-      width: 100%;
-    }
-
-    .eye {
-      position: absolute;
-      right: 10px;
+    button {
+      margin-top: 10px;
+      padding: 12px;
+      background: #07294D;
+      color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 1.1rem;
-      color: #555;
-      user-select: none;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #034172;
     }
 
     .register-text {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       margin-top: 10px;
     }
 
@@ -136,80 +214,54 @@
       font-weight: bold;
       text-decoration: none;
     }
-
-    .register-text a:hover {
-      text-decoration: underline;
-    }
-
-    /* Login Button */
-    button {
-      padding: 10px;
-      background: #07294D;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 15px;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #034172;
-    }
-
-    footer {
-      background: #dcdcdc;
-      padding: 20px;
-      border-top: 1px solid #aaa;
-      text-align: center;
-    }
-
-    /* Animation Keyframes */
-    @keyframes slideUpFade {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
   </style>
 </head>
+
 <body>
 
 <header>
-  <a href="./index.html" class="logo">Interly</a>
+  <a href="./index.html" class="logo">Internly</a>
 </header>
 
-<section class="form-section">
-  <h2>Log In</h2>
+<div class="page-wrapper">
 
-  <form id="loginForm">
-    <label for="email">Email Address:</label>
-    <input type="email" id="email" name="email">
-    <span class="error-message" id="emailError"></span>
+  <div class="login-card">
 
-    <label for="password">Password:</label>
-    <div class="password-container">
-      <input type="password" id="password" name="password">
-      <span id="togglePassword" class="eye">
-        <i class="fa-solid fa-eye"></i>
-      </span>
+    <div class="left-side">
+      <div class="i-logo">I</div>
+      <p>use your internly account</p>
     </div>
-    <span class="error-message" id="passwordError"></span>
 
-    <p class="register-text">
-      New to the website?
-      <a href="signup.html">Register here</a>
-    </p>
+    <div class="right-side">
 
-    <button type="submit">Log In</button>
-  </form>
-</section>
+      <h2>Log In</h2>
+
+      <form id="loginForm">
+        <label>Email Address:</label>
+        <input type="email" id="email">
+        <span class="error-message" id="emailError"></span>
+
+        <label>Password:</label>
+        <div class="password-container">
+          <input type="password" id="password">
+          <span id="togglePassword" class="eye">
+            <i class="fa-solid fa-eye"></i>
+          </span>
+        </div>
+        <span class="error-message" id="passwordError"></span>
+
+        <p class="register-text">
+          New to the website?
+          <a href="signup.html">Register here</a>
+        </p>
+
+        <button type="submit">Log In</button>
+      </form>
+
+    </div>
+  </div>
+
+</div>
 
 <script>
   const form = document.getElementById("loginForm");
@@ -217,18 +269,17 @@
   const passwordInput = document.getElementById("password");
   const emailError = document.getElementById("emailError");
   const passwordError = document.getElementById("passwordError");
+
   const togglePassword = document.getElementById("togglePassword");
   const eyeIcon = togglePassword.querySelector("i");
 
-  // Toggle password visibility
   togglePassword.addEventListener("click", function () {
-    const isPassword = passwordInput.getAttribute("type") === "password";
-    passwordInput.setAttribute("type", isPassword ? "text" : "password");
+    const isPassword = passwordInput.type === "password";
+    passwordInput.type = isPassword ? "text" : "password";
     eyeIcon.classList.toggle("fa-eye");
     eyeIcon.classList.toggle("fa-eye-slash");
   });
 
-  // Handle form submission
   form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -265,7 +316,6 @@
         const data = await res.json();
 
         if (!res.ok) {
-          passwordInput.classList.add("error");
           passwordError.textContent = data.error || "Login failed.";
           return;
         }

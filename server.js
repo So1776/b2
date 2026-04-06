@@ -16,6 +16,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/profile_pics")));
 
 // --- Database setup ---
 const dbPath = path.join(__dirname, "database.sqlite");
@@ -69,9 +70,16 @@ db.serialize(() => {
 });
 
 const uploadDir = path.join(__dirname, "uploads/resumes");
+// --- Profile picture upload directory ---
+const profilePicDir = path.join(__dirname, "uploads/profile_pics");
+if (!fs.existsSync(profilePicDir)) {
+  fs.mkdirSync(profilePicDir, { recursive: true });
+  console.log("✅ Created profile_pics directory");
+}
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
-  console.log("✅ Created uploads directory");
+  console.log("Created uploads directory");
 } 
 
 // --- Multer config (storage + file type + size limit) ---
@@ -102,6 +110,29 @@ const upload = multer({
   fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
+// --- Multer config for profile pictures ---
+const profilePicStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/profile_pics"),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `profile_${Date.now()}${ext}`);
+  },
+});
+
+function profilePicFilter(req, file, cb) {
+  const allowed = ["image/jpeg", "image/png", "image/jpg"];
+  if (!allowed.includes(file.mimetype)) {
+    return cb(new Error("Only JPG or PNG images allowed"));
+  }
+  cb(null, true);
+}
+
+const uploadProfilePic = multer({
+  storage: profilePicStorage,
+  fileFilter: profilePicFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+});
+
 
 // --- Routes ---
 app.get("/health", (req, res) => {
@@ -109,8 +140,9 @@ app.get("/health", (req, res) => {
 });
 
 // SIGNUP: creates a user account
-app.post("/signup", async (req, res) => {
+app.post("/signup", uploadProfilePic.single("profilePic"), async (req, res) => {
   const { name, email, password } = req.body;
+  const profilePicPath = req.file ? `/uploads/profile_pics/${req.file.filename}` : null;
 
   if (!name || !email || !password) {
     return res.status(400).json({ error: "name, email, and password are required" });
@@ -120,15 +152,16 @@ app.post("/signup", async (req, res) => {
     const password_hash = await bcrypt.hash(password, 10);
 
     db.run(
-      `INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)`,
-      [name, email, password_hash],
-      function (err) {
-        if (err) {
-          return res.status(400).json({ error: "Email already in use" });
-        }
-        return res.status(201).json({ message: "User created", user_id: this.lastID });
-      }
-    );
+  `INSERT INTO users (name, email, password_hash, profile_picture)
+   VALUES (?, ?, ?, ?)`,
+  [name, email, password_hash, profilePicPath],
+  function (err) {
+    if (err) {
+      return res.status(400).json({ error: "Email already in use" });
+    }
+    return res.status(201).json({ message: "User created", user_id: this.lastID });
+  }
+);
   } catch (e) {
     return res.status(500).json({ error: "Server error" });
   }
@@ -187,7 +220,8 @@ app.get("/resume", requireAuth, (req, res) => {
   db.get(
     `SELECT id, user_id, original_filename, stored_filename, mime_type, size, upload_path, uploaded_at
      FROM resumes
-     WHERE user_id = ?`,
+     WHERE user_id = ?
+     LIMIT 1`,
     [userId],
     (err, row) => {
       if (err) return res.status(500).json({ error: "Database error" });
@@ -195,6 +229,58 @@ app.get("/resume", requireAuth, (req, res) => {
       return res.json({ resume: row });
     }
   );
+});
+
+
+// Delete the logged-in user's resume (DB + file)
+app.delete("/resume", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+
+  // 1) Find the user's resume
+  db.get(
+    `SELECT id, upload_path
+     FROM resumes
+     WHERE user_id = ?
+     LIMIT 1`,
+    [userId],
+    async (err, row) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!row) return res.status(404).json({ error: "No resume found" });
+
+      // 2) Delete the file from disk (ignore if it's already missing)
+      try {
+        await fs.promises.unlink(row.upload_path);
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          return res.status(500).json({ error: "File delete failed" });
+        }
+      }
+
+      // 3) Delete the DB record
+      db.run(`DELETE FROM resumes WHERE id = ?`, [row.id], function (delErr) {
+        if (delErr) return res.status(500).json({ error: "Database delete failed" });
+        return res.json({ message: "Resume deleted" });
+      });
+    }
+  );
+});
+
+// STEP 1: Update/replace resume (just confirm request + file arrives)
+app.put("/resume", requireAuth, upload.single("resume"), (req, res) => {
+  console.log("PUT /resume hit");
+  console.log("user:", req.user);      // should contain user_id from JWT
+  console.log("file:", req.file);      // should contain uploaded file metadata
+
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  return res.status(200).json({
+    message: "Resume received (step 1 ok)",
+    filename: req.file.originalname,
+    storedAs: req.file.filename,
+    size: req.file.size,
+  });
 });
 
 // Simple protected resume upload route
@@ -254,4 +340,4 @@ app.get("/api/internships", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-}); 
+});
