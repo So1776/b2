@@ -501,7 +501,15 @@
   <!-- Jobs Section -->
   <div id="jobs" class="dashboard-section active">
     <h2>Available Computer Internships - Philadelphia, PA</h2>
-
+    <div class="search-bar-container">
+      <div class="search-bar-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="jobSearchInput" placeholder="Search internships..." aria-label="Search internships" />
+      </div>
+      <button class="search-clear-btn" id="searchClearBtn" onclick="clearJobSearch()">Clear</button>
+    </div>
+    <p class="no-results-msg" id="noResultsMsg">No internships match your search.</p>
+    <div id="banner-container"></div>
     <div class="job-card" onclick="toggleDetails(this)">
       <div class="job-header">
         <h3>Software Engineering Intern</h3>
@@ -513,7 +521,6 @@
         <div><i class="fas fa-dollar-sign"></i> $25/hr - $40/hr</div>
         <div><i class="fas fa-clock"></i> Full-time</div>
         <div><i class="fas fa-home"></i> Onsite</div>
-
         <div class="skill-bar">
           <div class="bar-label">Experience</div>
           <div class="bar-container"><div class="bar-fill" style="width: 70%;"></div></div>
@@ -529,7 +536,6 @@
           <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
           <div class="bar-percent">60%</div>
         </div>
-
         <button class="apply-btn">Apply Now</button>
       </div>
     </div>
@@ -545,7 +551,6 @@
         <div><i class="fas fa-dollar-sign"></i> $28/hr - $45/hr</div>
         <div><i class="fas fa-clock"></i> Full-time</div>
         <div><i class="fas fa-home"></i> Onsite</div>
-
         <div class="skill-bar">
           <div class="bar-label">Experience</div>
           <div class="bar-container"><div class="bar-fill" style="width: 60%;"></div></div>
@@ -561,7 +566,6 @@
           <div class="bar-container"><div class="bar-fill" style="width: 50%;"></div></div>
           <div class="bar-percent">50%</div>
         </div>
-
         <button class="apply-btn">Apply Now</button>
       </div>
     </div>
