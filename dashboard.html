@@ -221,7 +221,6 @@
       font-size: 0.85rem;
       color: #666;
     }
-    
 
     /* Profile */
     .profile-card {
@@ -363,36 +362,36 @@
       background: #c62828;
     }
 
-    /* modal */
+    /* Modal */
     .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-.close-btn {
-  align-self: flex-end;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: bold;
-}
+    .close-btn {
+      align-self: flex-end;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+    }
 
     /* Search Bar */
     .search-bar-container {
@@ -462,13 +461,6 @@
       margin-top: 10px;
     }
   </style>
-  <section id="jobs-section">
-  <h2>Internships</h2>
-
-  <div id="jobs-container">
-    <!-- jobs will be injected here -->
-  </div>
-</section>
 </head>
 
 <body>
@@ -510,6 +502,7 @@
     </div>
     <p class="no-results-msg" id="noResultsMsg">No internships match your search.</p>
     <div id="banner-container"></div>
+
     <div class="job-card" onclick="toggleDetails(this)">
       <div class="job-header">
         <h3>Software Engineering Intern</h3>
@@ -571,33 +564,28 @@
     </div>
   </div>
 
- <!-- Resume Section -->
-<div id="resume" class="dashboard-section">
-  <h2>Your Resume</h2>
-  <p>Upload or edit your resume here.</p>
+  <!-- Resume Section -->
+  <div id="resume" class="dashboard-section">
+    <h2>Your Resume</h2>
+    <p>Upload or edit your resume here.</p>
 
-  <div class="resume-upload">
-    <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" />
+    <div class="resume-upload">
+      <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" />
 
-    <!-- upload/update button -->
-    <button type="button" id="resumeBtn">
-      <span id="resumeBtnIcon">⬆️</span>
-      <span id="resumeBtnText">Upload Resume</span>
-    </button>
+      <button type="button" id="resumeBtn">
+        <span id="resumeBtnIcon">⬆️</span>
+        <span id="resumeBtnText">Upload Resume</span>
+      </button>
 
-    <!-- clickable filename (shows after selecting a file) -->
-    <a href="#" id="fileNameLink" class="file-note" style="display:none;"></a>
-
-    <!-- helper note -->
-    <div class="file-note" id="fileNote">File must be 5MB or less to upload successfully.</div>
+      <a href="#" id="fileNameLink" class="file-note" style="display:none;"></a>
+      <div class="file-note" id="fileNote">File must be 5MB or less to upload successfully.</div>
+    </div>
   </div>
-</div>
 
   <!-- Profile Section -->
   <div id="profile" class="dashboard-section">
     <h2>Your Profile</h2>
 
-    <!-- Brian's Code -->
     <div id="profileView" class="profile-card" style="display:none;">
       <p><strong>Name:</strong> <span id="viewName"></span></p>
       <p><strong>Major:</strong> <span id="viewMajor"></span></p>
@@ -634,79 +622,95 @@
     </div>
   </div>
 
- <!-- Settings Section -->
-<div id="settings" class="dashboard-section">
-  <h2>Settings</h2>
-  <div class="profile-card">
+  <!-- Settings Section -->
+  <div id="settings" class="dashboard-section">
+    <h2>Settings</h2>
+    <div class="profile-card">
 
-    <!-- Notifications -->
-    <div class="settings-group">
-      <h3><i class="fas fa-bell"></i> Notifications</h3>
-      <div class="settings-row">
-        <label>Email Notifications</label>
-        <label class="toggle">
-          <input type="checkbox" id="emailNotifications" checked>
-          <span class="toggle-slider"></span>
-        </label>
+      <!-- Notifications -->
+      <div class="settings-group">
+        <h3><i class="fas fa-bell"></i> Notifications</h3>
+        <div class="settings-row">
+          <label>Email Notifications</label>
+          <label class="toggle">
+            <input type="checkbox" id="emailNotifications" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <label>New Job Alerts</label>
+          <label class="toggle">
+            <input type="checkbox" id="newJobAlerts" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <label>Application Status Updates</label>
+          <label class="toggle">
+            <input type="checkbox" id="applicationStatusUpdates">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
-      <div class="settings-row">
-        <label>New Job Alerts</label>
-        <label class="toggle">
-          <input type="checkbox" id="newJobAlerts" checked>
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <div class="settings-row">
-        <label>Application Status Updates</label>
-        <label class="toggle">
-          <input type="checkbox" id="applicationStatusUpdates">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
 
-    <!-- Preferences -->
-    <div class="settings-group">
-      <h3><i class="fas fa-sliders-h"></i> Preferences</h3>
-      <div class="settings-row">
-        <label>Job Type</label>
-        <select class="settings-select" id="jobType">
-          <option>Full-time</option>
-          <option>Part-time</option>
-          <option>Remote</option>
-          <option>Hybrid</option>
-        </select>
+      <!-- Preferences -->
+      <div class="settings-group">
+        <h3><i class="fas fa-sliders-h"></i> Preferences</h3>
+        <div class="settings-row">
+          <label>Job Type</label>
+          <select class="settings-select" id="jobType">
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Remote</option>
+            <option>Hybrid</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label>Location</label>
+          <select class="settings-select" id="location">
+            <option>Philadelphia, PA</option>
+            <option>New York, NY</option>
+            <option>Remote</option>
+          </select>
+        </div>
       </div>
+
       <div class="settings-row">
-        <label>Location</label>
-        <select class="settings-select" id="location">
-          <option>Philadelphia, PA</option>
-          <option>New York, NY</option>
-          <option>Remote</option>
-        </select>
+        <button id="saveSettingsBtn" class="save-btn" style="width:auto; padding: 8px 16px;">
+          Save Settings
+        </button>
       </div>
-    </div>
-<div class="settings-row">
-  <button id="saveSettingsBtn" class="save-btn" style="width:auto; padding: 8px 16px;">
-    Save Settings
-  </button>
-</div>
-    <!-- Account -->
-    <div class="settings-group">
-      <h3><i class="fas fa-user-shield"></i> Account</h3>
-      <div class="settings-row">
-        <label>Change Password</label>
-        <button id="updatePasswordBtn" class="save-btn" style="width:auto; padding: 8px 16px; margin-top:0;">Update</button>
+
+      <!-- Account -->
+      <div class="settings-group">
+        <h3><i class="fas fa-user-shield"></i> Account</h3>
+        <div class="settings-row">
+          <label>Change Password</label>
+          <button id="updatePasswordBtn" class="save-btn" style="width:auto; padding: 8px 16px; margin-top:0;">Update</button>
+        </div>
+        <div class="settings-row">
+          <label>Delete Account</label>
+          <button id="deleteAccountBtn" class="danger-btn">Delete</button>
+        </div>
       </div>
-      <div class="settings-row">
-        <label>Delete Account</label>
-        <button id="deleteAccountBtn" class="danger-btn">Delete</button>
-      </div>
-    </div>
+
     </div>
   </div>
 
 </main>
+
+<!-- Delete Account Confirmation Modal -->
+<div id="deleteAccountModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span id="closeDeleteModal" class="close-btn">&times;</span>
+    <h3>Delete Account</h3>
+    <p>Are you sure you want to delete your account?</p>
+    <div style="display:flex; justify-content: flex-end; gap:10px; margin-top: 15px;">
+      <button id="cancelDeleteBtn" class="save-btn" style="background:#ccc; color:#333;">No</button>
+      <button id="confirmDeleteBtn" class="danger-btn">Yes</button>
+    </div>
+  </div>
+</div>
 
 <script src="dashboard.js"></script>
 <script src="deadline.js"></script>
@@ -738,7 +742,6 @@
         visibleCount++;
       } else {
         card.style.display = 'none';
-        // Collapse hidden cards
         const details = card.querySelector('.job-details');
         if (details) details.style.display = 'none';
       }
@@ -758,19 +761,13 @@
     filterJobs(this.value);
   });
 
+  // --- Profile ---
   function saveProfile() {
-    const name = document.getElementById('nameInput').value;
-    const major = document.getElementById('majorInput').value;
-    const grad = document.getElementById('gradInput').value;
-    const email = document.getElementById('emailInput').value;
-    const bio = document.getElementById('bioInput').value;
-
-    document.getElementById('viewName').textContent = name;
-    document.getElementById('viewMajor').textContent = major;
-    document.getElementById('viewGrad').textContent = grad;
-    document.getElementById('viewEmail').textContent = email;
-    document.getElementById('viewBio').textContent = bio;
-
+    document.getElementById('viewName').textContent  = document.getElementById('nameInput').value;
+    document.getElementById('viewMajor').textContent = document.getElementById('majorInput').value;
+    document.getElementById('viewGrad').textContent  = document.getElementById('gradInput').value;
+    document.getElementById('viewEmail').textContent = document.getElementById('emailInput').value;
+    document.getElementById('viewBio').textContent   = document.getElementById('bioInput').value;
     switchToView();
   }
 
@@ -784,234 +781,150 @@
     document.getElementById('profileEdit').style.display = 'block';
   }
 
-   // Resume upload UI behavior (show file name + change button + preview PDF/TXT)
+  // --- Resume Upload ---
+  const resumeFileInput = document.getElementById("resumeFile");
+  const resumeBtn       = document.getElementById("resumeBtn");
+  const resumeBtnIcon   = document.getElementById("resumeBtnIcon");
+  const resumeBtnText   = document.getElementById("resumeBtnText");
+  const fileNameLink    = document.getElementById("fileNameLink");
 
-const resumeFileInput = document.getElementById("resumeFile");
-const resumeBtn = document.getElementById("resumeBtn");
-const resumeBtnIcon = document.getElementById("resumeBtnIcon");
-const resumeBtnText = document.getElementById("resumeBtnText");
-const fileNameLink = document.getElementById("fileNameLink");
+  let selectedFileUrl = null;
 
-let selectedFileUrl = null;
-
-function cleanupPreviewUrl() {
-  if (selectedFileUrl) {
-    URL.revokeObjectURL(selectedFileUrl);
-    selectedFileUrl = null;
-  }
-}
-
-function resetResumeUI() {
-  cleanupPreviewUrl();
-
-  resumeBtnIcon.textContent = "⬆️";
-  resumeBtnText.textContent = "Upload Resume";
-
-  fileNameLink.textContent = "";
-  fileNameLink.href = "#";
-  fileNameLink.style.display = "none";
-  fileNameLink.removeAttribute("target");
-  fileNameLink.removeAttribute("rel");
-  fileNameLink.onclick = (e) => e.preventDefault();
-}
-
-if (resumeFileInput && resumeBtn && resumeBtnIcon && resumeBtnText && fileNameLink) {
-  resetResumeUI();
-
-  // Click button -> open file picker
-  resumeBtn.addEventListener("click", () => {
-    resumeFileInput.click();
-  });
-
-  // Pick file -> update UI + set preview link
-  resumeFileInput.addEventListener("change", () => {
-    const file = resumeFileInput.files?.[0];
-    resetResumeUI();
-    if (!file) return;
-
-    // update button
-    resumeBtnIcon.textContent = "📄";
-    resumeBtnText.textContent = "Update Resume";
-
-    // show filename
-    fileNameLink.textContent = file.name;
-    fileNameLink.style.display = "inline-block";
-
-    const ext = (file.name.split(".").pop() || "").toLowerCase();
-    const canPreview = ext === "pdf" || ext === "txt";
-
-    if (canPreview) {
-      selectedFileUrl = URL.createObjectURL(file);
-      fileNameLink.href = selectedFileUrl;
-      fileNameLink.target = "_blank";
-      fileNameLink.rel = "noopener noreferrer";
-      fileNameLink.onclick = null;
-    } else {
-      fileNameLink.onclick = (e) => {
-        e.preventDefault();
-        alert("Preview works for PDF/TXT only. DOC/DOCX needs backend preview/download.");
-      };
+  function cleanupPreviewUrl() {
+    if (selectedFileUrl) {
+      URL.revokeObjectURL(selectedFileUrl);
+      selectedFileUrl = null;
     }
-  });
+  }
 
-  window.addEventListener("beforeunload", cleanupPreviewUrl);
-  fetch('/api/internships?q=software+engineering+internship+philadelphia')
-    .then(res => res.json())
-    .then(jobs => {
-      const deadline = jobs?.[0]?.detected_extensions?.posted_at || "2026-04-01";
-      DeadlineBanner.init({ deadline });
-    })
-    .catch(() => {
-      DeadlineBanner.init({ deadline: "2026-04-01" });
+  function resetResumeUI() {
+    cleanupPreviewUrl();
+    resumeBtnIcon.textContent = "⬆️";
+    resumeBtnText.textContent = "Upload Resume";
+    fileNameLink.textContent = "";
+    fileNameLink.href = "#";
+    fileNameLink.style.display = "none";
+    fileNameLink.removeAttribute("target");
+    fileNameLink.removeAttribute("rel");
+    fileNameLink.onclick = (e) => e.preventDefault();
+  }
+
+  if (resumeFileInput && resumeBtn) {
+    resetResumeUI();
+
+    resumeBtn.addEventListener("click", () => resumeFileInput.click());
+
+    resumeFileInput.addEventListener("change", () => {
+      const file = resumeFileInput.files?.[0];
+      resetResumeUI();
+      if (!file) return;
+
+      resumeBtnIcon.textContent = "📄";
+      resumeBtnText.textContent = "Update Resume";
+      fileNameLink.textContent = file.name;
+      fileNameLink.style.display = "inline-block";
+
+      const ext = (file.name.split(".").pop() || "").toLowerCase();
+      if (ext === "pdf" || ext === "txt") {
+        selectedFileUrl = URL.createObjectURL(file);
+        fileNameLink.href = selectedFileUrl;
+        fileNameLink.target = "_blank";
+        fileNameLink.rel = "noopener noreferrer";
+        fileNameLink.onclick = null;
+      } else {
+        fileNameLink.onclick = (e) => {
+          e.preventDefault();
+          alert("Preview works for PDF/TXT only. DOC/DOCX needs backend preview/download.");
+        };
+      }
     });
-}
 
-// Settings Save Button actually collects values 
-const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+    window.addEventListener("beforeunload", cleanupPreviewUrl);
 
-if (saveSettingsBtn) {
-  saveSettingsBtn.addEventListener("click", () => {
-    const settingsData = {
-      emailNotifications: document.getElementById("emailNotifications").checked,
-      newJobAlerts: document.getElementById("newJobAlerts").checked,
-      applicationStatusUpdates: document.getElementById("applicationStatusUpdates").checked,
-      jobType: document.getElementById("jobType").value,
-      location: document.getElementById("location").value
-    };
+    fetch('/api/internships?q=software+engineering+internship+philadelphia')
+      .then(res => res.json())
+      .then(jobs => {
+        const deadline = jobs?.[0]?.detected_extensions?.posted_at || "2026-04-01";
+        DeadlineBanner.init({ deadline });
+      })
+      .catch(() => {
+        DeadlineBanner.init({ deadline: "2026-04-01" });
+      });
+  }
 
-    console.log("Settings collected:", settingsData);
-  });
-}
+  // --- Settings ---
+  const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener("click", () => {
+      const settingsData = {
+        emailNotifications: document.getElementById("emailNotifications").checked,
+        newJobAlerts: document.getElementById("newJobAlerts").checked,
+        applicationStatusUpdates: document.getElementById("applicationStatusUpdates").checked,
+        jobType: document.getElementById("jobType").value,
+        location: document.getElementById("location").value
+      };
+      console.log("Settings saved:", settingsData);
+    });
+  }
 
-// Change Password button opens modal
-const updatePasswordBtn = document.getElementById("updatePasswordBtn");
-const changePasswordModal = document.getElementById("changePasswordModal");
-const closePasswordModal = document.getElementById("closePasswordModal");
-
-if (updatePasswordBtn && changePasswordModal && closePasswordModal) {
-  updatePasswordBtn.addEventListener("click", () => {
-    changePasswordModal.style.display = "flex";
-  });
-
-  closePasswordModal.addEventListener("click", () => {
-    changePasswordModal.style.display = "none";
-  });
-}
-
-// Handle open and closing of modal
-document.addEventListener("DOMContentLoaded", () => {
-
+  // --- Change Password -> redirect to new page ---
   const updatePasswordBtn = document.getElementById("updatePasswordBtn");
-  const changePasswordModal = document.getElementById("changePasswordModal");
-  const closePasswordModal = document.getElementById("closePasswordModal");
-
-  if (updatePasswordBtn && changePasswordModal && closePasswordModal) {
+  if (updatePasswordBtn) {
     updatePasswordBtn.addEventListener("click", () => {
-      changePasswordModal.style.display = "flex";
-    });
-
-    closePasswordModal.addEventListener("click", () => {
-      changePasswordModal.style.display = "none";
+      window.location.href = "./change-password.html";
     });
   }
 
-  // Delete Account modal behavior
-const deleteAccountBtn = document.getElementById("deleteAccountBtn");
-const deleteAccountModal = document.getElementById("deleteAccountModal");
-const closeDeleteModal = document.getElementById("closeDeleteModal");
-const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+  // --- Delete Account Modal ---
+  document.addEventListener("DOMContentLoaded", () => {
+    const deleteAccountBtn  = document.getElementById("deleteAccountBtn");
+    const deleteAccountModal = document.getElementById("deleteAccountModal");
+    const closeDeleteModal  = document.getElementById("closeDeleteModal");
+    const cancelDeleteBtn   = document.getElementById("cancelDeleteBtn");
+    const confirmDeleteBtn  = document.getElementById("confirmDeleteBtn");
 
-if (deleteAccountBtn && deleteAccountModal) {
-  deleteAccountBtn.addEventListener("click", () => {
-    deleteAccountModal.style.display = "flex";
-  });
-
-  if (closeDeleteModal) {
-    closeDeleteModal.addEventListener("click", () => {
-      deleteAccountModal.style.display = "none";
-    });
-  }
-
-  if (cancelDeleteBtn) {
-    cancelDeleteBtn.addEventListener("click", () => {
-      deleteAccountModal.style.display = "none";
-    });
-  }
-}
-
-// Confirmation for account deletion
-const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-
-if (confirmDeleteBtn) {
-  confirmDeleteBtn.addEventListener("click", async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch("/account", {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
+    if (deleteAccountBtn && deleteAccountModal) {
+      deleteAccountBtn.addEventListener("click", () => {
+        deleteAccountModal.style.display = "flex";
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Failed to delete account");
-        return;
+      if (closeDeleteModal) {
+        closeDeleteModal.addEventListener("click", () => {
+          deleteAccountModal.style.display = "none";
+        });
       }
 
-      alert("Account deleted");
+      if (cancelDeleteBtn) {
+        cancelDeleteBtn.addEventListener("click", () => {
+          deleteAccountModal.style.display = "none";
+        });
+      }
+    }
 
-      // Clear token + redirect
-      localStorage.removeItem("token");
-      window.location.href = "/login.html";
-
-    } catch (err) {
-      console.error("Delete error:", err);
-      alert("Something went wrong");
+    if (confirmDeleteBtn) {
+      confirmDeleteBtn.addEventListener("click", async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await fetch("/account", {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || "Failed to delete account");
+            return;
+          }
+          alert("Account deleted");
+          localStorage.removeItem("token");
+          window.location.href = "/login.html";
+        } catch (err) {
+          console.error("Delete error:", err);
+          alert("Something went wrong");
+        }
+      });
     }
   });
-}
-});
-
 </script>
-<!-- Change Password Modal -->
-<div id="changePasswordModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span id="closePasswordModal" class="close-btn">&times;</span>
-    <h3>Change Password</h3>
 
-    <label for="currentPassword">Current Password</label>
-    <input type="password" id="currentPassword" />
-
-    <label for="newPassword">New Password</label>
-    <input type="password" id="newPassword" />
-
-    <label for="confirmNewPassword">Confirm New Password</label>
-    <input type="password" id="confirmNewPassword" />
-
-    <button id="savePasswordBtn" class="save-btn">Save</button>
-  </div>
-</div>
-
-<!-- Delete Account Confirmation Modal -->
-<div id="deleteAccountModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span id="closeDeleteModal" class="close-btn">&times;</span>
-    
-    <h3>Delete Account</h3>
-    <p>Are you sure you want to delete your account?</p>
-
-    <div style="display:flex; justify-content: flex-end; gap:10px; margin-top: 15px;">
-      <button id="cancelDeleteBtn" class="save-btn" style="background:#ccc; color:#333;">
-        No
-      </button>
-      <button id="confirmDeleteBtn" class="danger-btn">
-        Yes
-      </button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
