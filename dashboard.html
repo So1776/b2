@@ -395,13 +395,14 @@
 }
 
     /* Search Bar */
-    .search-bar-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      max-width: 600px;
-    }
+.search-bar-container {
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto 20px auto;   /* centers the container itself */
+  max-width: 600px;
+}
 
     .search-bar-wrapper {
       position: relative;
@@ -463,7 +464,7 @@
     }
   </style>
   <section id="jobs-section">
-  <h2>Internships</h2>
+  
 
   <div id="jobs-container">
     <!-- jobs will be injected here -->
