@@ -139,10 +139,8 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-// SIGNUP: creates a user account
-app.post("/signup", uploadProfilePic.single("profilePic"), async (req, res) => {
+app.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
-  const profilePicPath = req.file ? `/uploads/profile_pics/${req.file.filename}` : null;
 
   if (!name || !email || !password) {
     return res.status(400).json({ error: "name, email, and password are required" });
@@ -152,16 +150,17 @@ app.post("/signup", uploadProfilePic.single("profilePic"), async (req, res) => {
     const password_hash = await bcrypt.hash(password, 10);
 
     db.run(
-  `INSERT INTO users (name, email, password_hash, profile_picture)
-   VALUES (?, ?, ?, ?)`,
-  [name, email, password_hash, profilePicPath],
-  function (err) {
-    if (err) {
-      return res.status(400).json({ error: "Email already in use" });
-    }
-    return res.status(201).json({ message: "User created", user_id: this.lastID });
-  }
-);
+      `INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)`,
+      [name, email, password_hash],
+      function (err) {
+        if (err) {
+          return res.status(400).json({ error: "Email already in use" });
+        }
+        const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_later";
+        const token = jwt.sign({ user_id: this.lastID, email }, JWT_SECRET, { expiresIn: "2h" });
+        return res.status(201).json({ message: "User created", token, user_id: this.lastID });
+      }
+    );
   } catch (e) {
     return res.status(500).json({ error: "Server error" });
   }

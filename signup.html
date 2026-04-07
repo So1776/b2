@@ -159,7 +159,7 @@
 </header>
 
 <section class="form-section">
-  <form id="signupForm" action="/signup" method="POST">
+  <form id="signupForm">
 
     <h2>Create Your Account</h2>
 
@@ -205,10 +205,6 @@
       <option>2030</option>
     </select>
     <div class="error-message" id="gradyearError">Please select a year.</div>
-
-    <label for="profilePic">Profile Picture</label>
-    <input type="file" id="profilePic" name="profilePic" accept="image/*">
-    <img id="profilePicPreview" style="width:120px; height:120px; border-radius:50%; object-fit:cover; display:none;">
 
     <button type="submit">Create Account</button>
 
@@ -344,62 +340,34 @@
 
     if (hasError) return;
 
-    const user = {
-      name: nameInput.value,
-      email: emailInput.value,
-      password: password.value,
-      major: major.value,
-      gradyear: gradyear.value
-    };
-
     try {
-      if (hasError) {
-        console.log("BLOCKED: validation failed");
-        return;
-      }
-
-      console.log("ABOUT TO FETCH. hasError =", hasError);
       const res = await fetch("/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: nameInput.value.trim(),
           email: emailInput.value.trim(),
-          password: password.value.trim()
+          password: password.value
         })
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        password.classList.add("error");
-        passwordError.textContent = data.error || "Login failed.";
+        emailInput.classList.add("error");
+        emailError.textContent = data.error || "Signup failed.";
+        emailError.style.visibility = "visible";
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(user));
-
-      alert("Account created successfully!");
-      form.reset();
-      document.querySelectorAll("input, select").forEach(el => el.classList.remove("success"));
       localStorage.setItem("token", data.token);
       window.location.href = "dashboard.html";
     } catch (err) {
       passwordError.textContent = "Server error. Try again.";
+      passwordError.style.visibility = "visible";
     }
 
   });
-</script>
-
-<script>
-document.getElementById("profilePic").addEventListener("change", function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const preview = document.getElementById("profilePicPreview");
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = "block";
-    }
-});
 </script>
 
 </body>

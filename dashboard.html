@@ -600,6 +600,8 @@
 
     <!-- Brian's Code -->
     <div id="profileView" class="profile-card" style="display:none;">
+      <img id="viewProfilePic" src="" alt="Profile"
+        style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #ccc;display:none;margin-bottom:12px;">
       <p><strong>Name:</strong> <span id="viewName"></span></p>
       <p><strong>Major:</strong> <span id="viewMajor"></span></p>
       <p><strong>Graduation Year:</strong> <span id="viewGrad"></span></p>
@@ -610,6 +612,15 @@
 
     <div id="profileEdit" class="profile-card">
       <form id="profileForm">
+        <div class="form-group" style="align-items:center;">
+          <label>Profile Picture</label>
+          <img id="profilePicPreview" src="" alt="Profile"
+            style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #ccc;display:none;margin-bottom:8px;">
+          <label for="profilePicInput" style="cursor:pointer;color:#005bbb;font-weight:normal;font-size:0.9rem;">
+            <i class="fas fa-camera"></i> Upload photo
+          </label>
+          <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
+        </div>
         <div class="form-group">
           <label>Full Name</label>
           <input id="nameInput" type="text" placeholder="Enter your full name">
@@ -772,6 +783,13 @@
     document.getElementById('viewEmail').textContent = email;
     document.getElementById('viewBio').textContent = bio;
 
+    // Copy profile pic to view if set
+    const preview = document.getElementById('profilePicPreview');
+    if (preview && preview.src && preview.style.display !== 'none') {
+      const viewPic = document.getElementById('viewProfilePic');
+      if (viewPic) { viewPic.src = preview.src; viewPic.style.display = 'block'; }
+    }
+
     switchToView();
   }
 
@@ -856,6 +874,18 @@ if (resumeFileInput && resumeBtn && resumeBtnIcon && resumeBtnText && fileNameLi
   });
 
   window.addEventListener("beforeunload", cleanupPreviewUrl);
+  // Profile picture preview handler
+  const profilePicInput = document.getElementById('profilePicInput');
+  if (profilePicInput) {
+    profilePicInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      const preview = document.getElementById('profilePicPreview');
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+    });
+  }
+
   fetch('/api/internships?q=software+engineering+internship+philadelphia')
     .then(res => res.json())
     .then(jobs => {
