@@ -18,6 +18,16 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/profile_pics")));
 
+// Password validation rule
+function isValidPassword(password) {
+  const minLength = password.length >= 12;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecial = /[!@#$%^&*()_\-+=<>?/{}[\]|\\]/.test(password);
+
+  return minLength && hasUppercase && hasNumber && hasSpecial;
+}
+
 // --- Database setup ---
 const dbPath = path.join(__dirname, "database.sqlite");
 console.log("DB PATH =>", dbPath);
@@ -170,21 +180,82 @@ app.post("/signup", async (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
+  console.log("Login attempt:", email);
+
   if (!email || !password) {
     return res.status(400).json({ error: "email and password are required" });
   }
 
   db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
     if (err) return res.status(500).json({ error: "Server error" });
+
+    console.log("User from DB:", user);
+
     if (!user) return res.status(401).json({ error: "Invalid email or password" });
 
     const ok = await bcrypt.compare(password, user.password_hash);
+    console.log("Password match:", ok);
+
     if (!ok) return res.status(401).json({ error: "Invalid email or password" });
 
     const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_later";
     const token = jwt.sign({ user_id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "2h" });
 
     return res.json({ message: "Logged in", token });
+  });
+});
+
+// Change password
+app.post("/change-password", requireAuth, async (req, res) => {
+  const userId = req.user.user_id;
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    return res.status(400).json({ error: "All password fields are required." });
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).json({ error: "New passwords do not match." });
+  }
+
+  if (!isValidPassword(newPassword)) {
+    return res.status(400).json({
+      error: "Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."
+    });
+  }
+
+  db.get("SELECT password_hash FROM users WHERE id = ?", [userId], async (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error." });
+    }
+
+    if (!row) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const matches = await bcrypt.compare(currentPassword, row.password_hash);
+
+    if (!matches) {
+      return res.status(401).json({ error: "Current password is incorrect." });
+    }
+
+    try {
+      const newHash = await bcrypt.hash(newPassword, 10);
+
+      db.run(
+        "UPDATE users SET password_hash = ? WHERE id = ?",
+        [newHash, userId],
+        function (updateErr) {
+          if (updateErr) {
+            return res.status(500).json({ error: "Failed to update password." });
+          }
+
+          return res.json({ message: "Password updated successfully." });
+        }
+      );
+    } catch (hashErr) {
+      return res.status(500).json({ error: "Server error." });
+    }
   });
 });
 

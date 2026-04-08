@@ -708,7 +708,9 @@
       <h3><i class="fas fa-user-shield"></i> Account</h3>
       <div class="settings-row">
         <label>Change Password</label>
-        <button id="updatePasswordBtn" class="save-btn" style="width:auto; padding: 8px 16px; margin-top:0;">Update</button>
+       <a href="./changePassword.html" class="save-btn" style="width:auto; padding: 8px 16px; margin-top:0; text-decoration:none; display:inline-block;">
+  Update
+</a>
       </div>
       <div class="settings-row">
         <label>Delete Account</label>
@@ -914,21 +916,6 @@ if (saveSettingsBtn) {
   });
 }
 
-// Change Password button opens modal
-const updatePasswordBtn = document.getElementById("updatePasswordBtn");
-const changePasswordModal = document.getElementById("changePasswordModal");
-const closePasswordModal = document.getElementById("closePasswordModal");
-
-if (updatePasswordBtn && changePasswordModal && closePasswordModal) {
-  updatePasswordBtn.addEventListener("click", () => {
-    changePasswordModal.style.display = "flex";
-  });
-
-  closePasswordModal.addEventListener("click", () => {
-    changePasswordModal.style.display = "none";
-  });
-}
-
 // Handle open and closing of modal
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -1008,23 +995,8 @@ if (confirmDeleteBtn) {
 
 </script>
 <!-- Change Password Modal -->
-<div id="changePasswordModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <span id="closePasswordModal" class="close-btn">&times;</span>
-    <h3>Change Password</h3>
+<! -- deleted block of code here, due to duplicate - (Caleb) -->
 
-    <label for="currentPassword">Current Password</label>
-    <input type="password" id="currentPassword" />
-
-    <label for="newPassword">New Password</label>
-    <input type="password" id="newPassword" />
-
-    <label for="confirmNewPassword">Confirm New Password</label>
-    <input type="password" id="confirmNewPassword" />
-
-    <button id="savePasswordBtn" class="save-btn">Save</button>
-  </div>
-</div>
 
 <!-- Delete Account Confirmation Modal -->
 <div id="deleteAccountModal" class="modal" style="display: none;">
