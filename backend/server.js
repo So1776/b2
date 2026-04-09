@@ -15,7 +15,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, "..")));
 app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/profile_pics")));
 
 // Password validation rule
@@ -29,7 +29,7 @@ function isValidPassword(password) {
 }
 
 // --- Database setup ---
-const dbPath = path.join(__dirname, "database.sqlite");
+const dbPath = path.join(__dirname, "..", "database.sqlite");
 console.log("DB PATH =>", dbPath);
 const db = new sqlite3.Database(dbPath);
 
@@ -145,6 +145,12 @@ const uploadProfilePic = multer({
 
 
 // --- Routes ---
+
+// Root route → homepage
+app.get("/", (req, res) => {
+  res.redirect("/frontpage/front.html");
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
