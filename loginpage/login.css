@@ -1,0 +1,234 @@
+/* Rushdi Mohmmads Code */
+
+
+/* PAGE BACKGROUND */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* DATA STRUCTURE BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(7,41,77,0.08) 2px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(255,198,0,0.08) 2px, transparent 2px),
+    linear-gradient(rgba(7,41,77,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7,41,77,0.05) 1px, transparent 1px);
+  background-size: 
+    120px 120px,
+    140px 140px,
+    60px 60px,
+    60px 60px;
+  z-index: 0;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(90deg, #07294D, #FFC600);
+  color: white;
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* LOGO */
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 3px;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.logo:hover::after {
+  width: 100%;
+}
+
+/* WRAPPER */
+.page-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 90px;
+  position: relative;
+  z-index: 1;
+}
+
+/* LOGIN CARD */
+.login-card {
+  background: white;
+  width: 900px;
+  max-width: 95%;
+  height: 500px;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  display: flex;
+  overflow: hidden;
+
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  animation: cardIn 0.8s ease forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px) scale(1);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+}
+
+@keyframes cardIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* LEFT SIDE */
+.left-side {
+  width: 40%;
+  background: #07294D;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+}
+
+.i-logo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  width: 70px;
+  height: 70px;
+  background: white;
+  color: #07294D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.left-side p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* RIGHT SIDE */
+.right-side {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+}
+
+h2 {
+  color: #07294D;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+label {
+  font-weight: bold;
+  text-align: left;
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}
+
+input.error {
+  border: 2px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  height: 14px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  background: #07294D;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #034172;
+}
+
+.register-text {
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.register-text a {
+  color: #007BFF;
+  font-weight: bold;
+  text-decoration: none;
+}

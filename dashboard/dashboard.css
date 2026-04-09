@@ -1,0 +1,309 @@
+/* Rushdi Mohmmads Code */
+
+/* =========================
+            BASE
+========================= */
+
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #333;
+}
+
+main {
+  padding: 30px;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  background: #07294D;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  position: relative;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.25s ease;
+}
+
+.logo:hover::after {
+  width: 100%;
+}
+
+.nav-top {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-item:hover {
+  text-decoration: underline;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.settings-btn:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+.logout {
+  background: #FFC600;
+  color: #07294D;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+
+/* =========================
+   SECTIONS / ANIMATION
+========================= */
+
+.dashboard-section {
+  display: none;
+  opacity: 0;
+}
+
+.dashboard-section.active {
+  display: block;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =========================
+   SEARCH BAR
+========================= */
+
+.search-wrapper{
+  display:flex;
+  justify-content:center;
+  margin-bottom:25px;
+  width:100%;
+}
+
+.search-bar{
+  width:520px;
+  background:white;
+  border-radius:50px;
+  padding:14px 22px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  transition:all .2s ease;
+}
+
+.search-bar input{
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:15px;
+  background:transparent;
+}
+
+.search-bar i{
+  color:#07294D;
+  font-size:14px;
+}
+
+.search-bar:focus-within{
+  box-shadow:0 6px 18px rgba(0,0,0,0.15);
+  transform:translateY(-1px);
+}
+
+
+/* =========================
+   JOB LAYOUT
+========================= */
+
+.jobs-container{
+  display:flex;
+  gap:20px;
+}
+
+.job-list{
+  width:320px;
+  background:white;
+  padding:20px;
+  border-radius:8px;
+}
+
+.job-card{
+  padding:15px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-bottom:10px;
+  transition:.2s;
+  border:1px solid transparent;
+}
+
+.job-card:hover{
+  background:#f1f4ff;
+}
+
+.job-card.active{
+  background:#07294D;
+  color:white;
+}
+
+.job-details{
+  flex:1;
+  background:white;
+  padding:30px;
+  border-radius:8px;
+  animation: fadeIn .4s ease;
+}
+
+.salary{
+  font-size:20px;
+  font-weight:bold;
+  color:#07294D;
+  margin:10px 0;
+}
+
+.job-meta{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.job-meta span{
+  background:#eef2ff;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+
+/* =========================
+   SKILL CIRCLES
+========================= */
+
+.skill-circles{
+  display:flex;
+  gap:40px;
+  margin-top:30px;
+}
+
+.circle{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:conic-gradient(#07294D 0% 65%, #eee 65%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.inner{
+  width:70px;
+  height:70px;
+  background:white;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.circle p{
+  position:absolute;
+  bottom:-25px;
+  font-size:12px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.job-buttons{
+  margin-top:30px;
+  display:flex;
+  gap:10px;
+}
+
+.save-btn{
+  padding:10px 20px;
+  border:2px solid #07294D;
+  background:white;
+  color:#07294D;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.apply-btn{
+  padding:10px 20px;
+  background:#FFC600;
+  border:none;
+  color:#07294D;
+  font-weight:bold;
+  border-radius:6px;
+  cursor:pointer;
+}
