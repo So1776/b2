@@ -151,6 +151,22 @@ app.get("/", (req, res) => {
   res.redirect("/frontpage/front.html");
 });
 
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "loginpage", "login.html"));
+});
+
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "registerpage", "signup.html"));
+});
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "dashboard", "dashboard.html"));
+});
+
+app.get("/change-password", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "frontpage", "changePassword.html"));
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
