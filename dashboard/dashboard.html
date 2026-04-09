@@ -1,0 +1,154 @@
+<!-- Rushdi Mohmmads Code -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Internship Tracker Dashboard</title>
+
+  <link rel="stylesheet" href="dashboard.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <div class="header-left">
+    <a href="../frontpage/front.html" class="logo">Internly</a>
+
+    <div class="nav-top">
+      <div class="nav-item" onclick="showSection('jobs')">
+        <i class="fas fa-briefcase"></i> Jobs
+      </div>
+
+      <div class="nav-item" onclick="showSection('resume')">
+        <i class="fas fa-file-alt"></i> Resume
+      </div>
+
+      <div class="nav-item" onclick="showSection('profile')">
+        <i class="fas fa-user"></i> Profile
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button class="settings-btn" onclick="showSection('settings')">
+      <i class="fas fa-cog"></i> Settings
+    </button>
+
+    <a href="../frontpage/front.html" class="logout">Logout</a>
+  </div>
+</header>
+
+<main>
+
+<!-- JOBS SECTION -->
+<section id="jobs" class="dashboard-section active">
+
+<!-- SEARCH BAR -->
+<div class="search-wrapper">
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" placeholder="Search tech jobs in Philadelphia..." />
+  </div>
+</div>
+
+<div class="jobs-container">
+
+<!-- LEFT SIDE -->
+<div class="job-list">
+
+<div class="job-card active" onclick="showJob(event,'frontend')">
+<h3>Frontend Developer</h3>
+<p>Philadelphia, PA • Remote</p>
+</div>
+
+<div class="job-card" onclick="showJob(event,'it')">
+<h3>IT Support Specialist</h3>
+<p>Philadelphia, PA • On Site</p>
+</div>
+
+<div class="job-card" onclick="showJob(event,'software')">
+<h3>Junior Software Engineer</h3>
+<p>Philadelphia, PA • Hybrid</p>
+</div>
+
+<div class="job-card" onclick="showJob(event,'data')">
+<h3>Data Analyst Intern</h3>
+<p>Philadelphia, PA • Part Time</p>
+</div>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+<div class="job-details" id="jobDetails">
+
+<h2 id="jobTitle">Frontend Developer</h2>
+
+<div class="salary" id="jobSalary">$75,000 / year</div>
+
+<p class="job-description" id="jobDesc">
+Build modern UI applications using HTML, CSS and JavaScript.
+Work with designers and backend developers to create responsive
+interfaces for production web apps.
+</p>
+
+<div class="job-meta" id="jobMeta">
+<span>Remote</span>
+<span>Full Time</span>
+<span>Entry Level</span>
+</div>
+
+<h3>What You'll Do</h3>
+<ul id="jobTasks">
+<li>Build UI components</li>
+<li>Fix frontend bugs</li>
+<li>Work with APIs</li>
+<li>Improve UX</li>
+</ul>
+
+<h3>Experience Needed</h3>
+<ul id="jobExperience">
+<li>HTML</li>
+<li>CSS</li>
+<li>JavaScript</li>
+</ul>
+
+<div class="skill-circles">
+
+<div class="circle" id="expCircle">
+<div class="inner" id="expPercent">65%</div>
+<p>Experience</p>
+</div>
+
+<div class="circle" id="skillCircle">
+<div class="inner" id="skillPercent">80%</div>
+<p>Industry Skill</p>
+</div>
+
+<div class="circle" id="commCircle">
+<div class="inner" id="commPercent">55%</div>
+<p>Communication</p>
+</div>
+
+</div>
+
+<div class="job-buttons">
+<button class="save-btn">Save</button>
+<button class="apply-btn">Apply</button>
+</div>
+
+</div>
+
+</div>
+</section>
+
+</main>
+
+<script src="dashjoblisting.js"></script>
+
+</body>
+</html>
