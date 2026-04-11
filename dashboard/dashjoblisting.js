@@ -135,31 +135,38 @@ document.getElementById("commCircle").style.background =
 }
 
 
-
-/* =========================
-   SEARCH FILTER
-========================= */
-
 document.addEventListener("DOMContentLoaded", function(){
 
 const searchInput = document.querySelector(".search-bar input")
-const jobs = document.querySelectorAll(".job-card")
+const jobList = document.querySelector(".job-list")         // NEW
 
-searchInput.addEventListener("keyup", function(){
+// NEW — create & inject "No results" message
+const noResultsMsg = document.createElement("p")
+noResultsMsg.id = "no-results-msg"
+noResultsMsg.textContent = "No results found."
+noResultsMsg.style.display = "none"
+noResultsMsg.style.padding = "16px"
+noResultsMsg.style.color = "#666"
+noResultsMsg.style.fontStyle = "italic"
+jobList.appendChild(noResultsMsg)
 
-const value = this.value.toLowerCase()
+searchInput.addEventListener("input", function(){           // CHANGED: keyup → input
+
+const value = this.value.toLowerCase().trim()              // CHANGED: added .trim()
+const jobs = document.querySelectorAll(".job-card")        // MOVED: inside handler
+let visibleCount = 0                                       // NEW
 
 jobs.forEach(job => {
-
 const text = job.innerText.toLowerCase()
-
 if(text.includes(value)){
 job.style.display = "block"
+visibleCount++                                             // NEW
 }else{
 job.style.display = "none"
 }
-
 })
+
+noResultsMsg.style.display = visibleCount === 0 ? "block" : "none"  // NEW
 
 })
 
