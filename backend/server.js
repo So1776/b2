@@ -148,7 +148,7 @@ const uploadProfilePic = multer({
 
 // Root route → homepage
 app.get("/", (req, res) => {
-  res.redirect("/frontpage/front.html");
+  res.redirect("../frontpage/front.html");
 });
 
 app.get("/health", (req, res) => {
