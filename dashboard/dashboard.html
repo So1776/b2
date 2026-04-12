@@ -47,11 +47,13 @@
 <!-- JOBS SECTION -->
 <section id="jobs" class="dashboard-section active">
 
-<!-- SEARCH BAR -->
+<!-- SEARCH BAR updated by Caleb  -->  
 <div class="search-wrapper">
   <div class="search-bar">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Search tech jobs in Philadelphia..." />
+   <input type="text" id="searchInput" placeholder="I'm looking for..." />
+<button id="searchBtn" class="search-icon-btn" type="button">
+  <i class="fas fa-search"></i>
+</button>
   </div>
 </div>
 
@@ -106,22 +108,64 @@
 <script>
 (function () {
 
-  // ── CONFIG ────────────────────────────────────────────────────────────
-  // Point this at your backend proxy — never expose your API key here.
-  // Your proxy should call SerpAPI server-side and forward the response.
-  // For local testing only you can temporarily put the full SerpAPI URL.
-  const API_URL = '/api/jobs';
+ 
+  // Point this at the backend proxy — never expose the API key here.
+  
+  const API_URL = '/api/internships';
   // ──────────────────────────────────────────────────────────────────────
 
   let jobs = [];
+  // Trigger search API call using user input (by Caleb)
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
 
-  async function loadJobs() {
-    try {
-      const res = await fetch(API_URL);
+function handleSearch() {
+  const query = searchInput.value.trim();
+  
+  if (!query) {
+    alert("Please enter a search term.");
+    return;
+  }
+
+  loadJobs(query);
+}
+
+if (searchBtn) {
+  searchBtn.addEventListener("click", handleSearch);
+}
+
+if (searchInput) {
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  });
+}
+
+  async function loadJobs(query = "") {
+  try {
+    const url = query
+      ? `${API_URL}?q=${encodeURIComponent(query)}`
+      : API_URL;
+
+    document.getElementById('jobList').innerHTML = '<p class="loading-text">Loading...</p>';
+    document.getElementById('jobDetails').style.display = 'none';
+    document.getElementById('jobError').style.display = 'none';
+
+const res = await fetch(url);
       if (!res.ok) throw new Error('Bad response');
+
       const data = await res.json();
       jobs = data.jobs_results || data || [];
-      if (!Array.isArray(jobs) || jobs.length === 0) throw new Error('No jobs');
+      if (!Array.isArray(jobs) || jobs.length === 0) {
+  document.getElementById('jobList').innerHTML = '<p>No results found.</p>';
+  document.getElementById('jobDetails').style.display = 'none';
+  return;
+}
+
+      document.getElementById('jobList').style.display = 'block';
+      document.getElementById('jobError').style.display = 'none';
+
       renderList();
       showJob(0);
     } catch (err) {
