@@ -18,6 +18,24 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "..")));
 app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/profile_pics")));
 
+// API Endpoints
+app.get("/api/jobs", async (req, res) => { 
+  try {
+    const response = await axios.get("https://serpapi.com/search.json", {
+      params: {
+        engine: "google_jobs",
+        q: "CS cybersecurity internships",
+        location: "United States",
+        api_key: process.env.SERPAPI_KEY
+      }
+    });
+    res.json({ jobs_results: response.data.jobs_results });
+  } catch (err) {
+    console.error("SerpApi error:", err.message);
+    res.status(500).json({ error: "Failed to fetch jobs" });
+  }
+});
+
 // Password validation rule
 function isValidPassword(password) {
   const minLength = password.length >= 12;
@@ -145,6 +163,7 @@ const uploadProfilePic = multer({
 
 
 // --- Routes ---
+
 
 // Root route → homepage
 app.get("/", (req, res) => {

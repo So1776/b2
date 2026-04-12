@@ -58,97 +58,181 @@
 <div class="jobs-container">
 
 <!-- LEFT SIDE -->
-<div class="job-list">
-
-<div class="job-card active" onclick="showJob(event,'frontend')">
-<h3>Frontend Developer</h3>
-<p>Philadelphia, PA • Remote</p>
+<div class="job-list" id="jobList">
+  <p style="padding:1rem;color:#888;">Loading jobs…</p>
 </div>
-
-<div class="job-card" onclick="showJob(event,'it')">
-<h3>IT Support Specialist</h3>
-<p>Philadelphia, PA • On Site</p>
-</div>
-
-<div class="job-card" onclick="showJob(event,'software')">
-<h3>Junior Software Engineer</h3>
-<p>Philadelphia, PA • Hybrid</p>
-</div>
-
-<div class="job-card" onclick="showJob(event,'data')">
-<h3>Data Analyst Intern</h3>
-<p>Philadelphia, PA • Part Time</p>
-</div>
-
-</div>
-
 
 <!-- RIGHT SIDE -->
-<div class="job-details" id="jobDetails">
+<div class="job-details" id="jobDetails" style="display:none;">
 
-<h2 id="jobTitle">Frontend Developer</h2>
+  <h2 id="jobTitle"></h2>
+  <div class="salary" id="jobSalary"></div>
+  <p class="job-description" id="jobDesc"></p>
 
-<div class="salary" id="jobSalary">$75,000 / year</div>
+  <div class="job-meta" id="jobMeta"></div>
 
-<p class="job-description" id="jobDesc">
-Build modern UI applications using HTML, CSS and JavaScript.
-Work with designers and backend developers to create responsive
-interfaces for production web apps.
-</p>
+  <h3>What You'll Do</h3>
+  <ul id="jobTasks"></ul>
 
-<div class="job-meta" id="jobMeta">
-<span>Remote</span>
-<span>Full Time</span>
-<span>Entry Level</span>
-</div>
+  <h3>Experience Needed</h3>
+  <ul id="jobExperience"></ul>
 
-<h3>What You'll Do</h3>
-<ul id="jobTasks">
-<li>Build UI components</li>
-<li>Fix frontend bugs</li>
-<li>Work with APIs</li>
-<li>Improve UX</li>
-</ul>
+  <div class="skill-circles">
+    <div class="circle" id="expCircle">
+      <div class="inner" id="expPercent">—</div>
+      <p>Experience</p>
+    </div>
+    <div class="circle" id="skillCircle">
+      <div class="inner" id="skillPercent">—</div>
+      <p>Industry Skill</p>
+    </div>
+    <div class="circle" id="commCircle">
+      <div class="inner" id="commPercent">—</div>
+      <p>Communication</p>
+    </div>
+  </div>
 
-<h3>Experience Needed</h3>
-<ul id="jobExperience">
-<li>HTML</li>
-<li>CSS</li>
-<li>JavaScript</li>
-</ul>
-
-<div class="skill-circles">
-
-<div class="circle" id="expCircle">
-<div class="inner" id="expPercent">65%</div>
-<p>Experience</p>
-</div>
-
-<div class="circle" id="skillCircle">
-<div class="inner" id="skillPercent">80%</div>
-<p>Industry Skill</p>
-</div>
-
-<div class="circle" id="commCircle">
-<div class="inner" id="commPercent">55%</div>
-<p>Communication</p>
-</div>
+  <div class="job-buttons">
+    <button class="save-btn">Save</button>
+    <button class="apply-btn" id="applyBtn">Apply</button>
+  </div>
 
 </div>
 
-<div class="job-buttons">
-<button class="save-btn">Save</button>
-<button class="apply-btn">Apply</button>
+<div id="jobError" style="display:none;padding:1rem;color:#c00;">
+  Failed to load jobs. Please try again later.
 </div>
 
-</div>
+<script>
+(function () {
 
-</div>
-</section>
+  // ── CONFIG ────────────────────────────────────────────────────────────
+  // Point this at your backend proxy — never expose your API key here.
+  // Your proxy should call SerpAPI server-side and forward the response.
+  // For local testing only you can temporarily put the full SerpAPI URL.
+  const API_URL = '/api/jobs';
+  // ──────────────────────────────────────────────────────────────────────
 
-</main>
+  let jobs = [];
 
-<script src="dashjoblisting.js"></script>
+  async function loadJobs() {
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('Bad response');
+      const data = await res.json();
+      jobs = data.jobs_results || data || [];
+      if (!Array.isArray(jobs) || jobs.length === 0) throw new Error('No jobs');
+      renderList();
+      showJob(0);
+    } catch (err) {
+      console.error('Job fetch error:', err);
+      document.getElementById('jobList').style.display = 'none';
+      document.getElementById('jobError').style.display = 'block';
+    }
+  }
 
-</body>
-</html>
+  function renderList() {
+    const list = document.getElementById('jobList');
+    list.innerHTML = '';
+    jobs.forEach(function (job, i) {
+      const card = document.createElement('div');
+      card.className = 'job-card' + (i === 0 ? ' active' : '');
+      card.innerHTML =
+        '<h3>' + escHtml(job.title || 'Untitled') + '</h3>' +
+        '<p>' + escHtml(job.location || '') +
+          (job.detected_extensions && job.detected_extensions.schedule_type
+            ? ' • ' + escHtml(job.detected_extensions.schedule_type) : '') +
+        '</p>';
+      card.addEventListener('click', function (e) { showJob(i, e); });
+      list.appendChild(card);
+    });
+  }
+
+  function showJob(index, e) {
+    if (e) e.preventDefault();
+    document.querySelectorAll('.job-card').forEach(function (c, i) {
+      c.classList.toggle('active', i === index);
+    });
+
+    const job = jobs[index];
+    const ext = job.detected_extensions || {};
+
+    setText('jobTitle', job.title);
+    setText('jobSalary', ext.salary || job.salary || '');
+
+    const fullDesc = job.description || '';
+    setText('jobDesc', fullDesc.length > 400 ? fullDesc.slice(0, 400) + '…' : fullDesc);
+
+    const metaEl = document.getElementById('jobMeta');
+    metaEl.innerHTML = '';
+    [ext.schedule_type, ext.work_from_home ? 'Remote' : null, job.location]
+      .filter(Boolean)
+      .forEach(function (m) {
+        const span = document.createElement('span');
+        span.textContent = m;
+        metaEl.appendChild(span);
+      });
+
+    renderUL('jobTasks', getHighlightItems(job, 'Responsibilities'), 5);
+    renderUL('jobExperience', getHighlightItems(job, 'Qualifications'), 5);
+
+    const c = deriveCircleValues(job);
+    setText('expPercent', c.experience + '%');
+    setText('skillPercent', c.skill + '%');
+    setText('commPercent', c.communication + '%');
+
+    const applyLink = job.apply_options && job.apply_options[0]
+      ? job.apply_options[0].link
+      : (job.source_link || job.share_link || '#');
+    document.getElementById('applyBtn').onclick = function () {
+      window.open(applyLink, '_blank');
+    };
+
+    document.getElementById('jobDetails').style.display = '';
+  }
+
+  function renderUL(id, items, max) {
+    const el = document.getElementById(id);
+    el.innerHTML = '';
+    (items.length ? items.slice(0, max) : ['See full description']).forEach(function (t) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      el.appendChild(li);
+    });
+  }
+
+  function getHighlightItems(job, section) {
+    if (!job.job_highlights) return [];
+    const s = job.job_highlights.find(function (h) {
+      return h.title && h.title.toLowerCase().indexOf(section.toLowerCase()) !== -1;
+    });
+    return s ? s.items : [];
+  }
+
+  function deriveCircleValues(job) {
+    const title = (job.title || '').toLowerCase();
+    const isSenior = /senior|lead|principal|staff/.test(title);
+    const isIntern = /intern|junior|entry/.test(title);
+    const ext = job.detected_extensions || {};
+    return {
+      experience:    isSenior ? 85 : isIntern ? 35 : 65,
+      skill:         isSenior ? 90 : isIntern ? 50 : 75,
+      communication: ext.schedule_type === 'Full-time' ? 70 : 55
+    };
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value || '';
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  loadJobs();
+
+})();
+</script>
