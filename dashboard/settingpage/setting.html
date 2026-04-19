@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Settings – Internly</title>
+  <link rel="stylesheet" href="settings.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <a href="../frontpage/front.html" class="logo">Internly</a>
+    <nav class="nav-top">
+      <a class="nav-item" href="dashboard.html"><i class="fas fa-briefcase"></i> Jobs</a>
+      <a class="nav-item" href="dashboard.html"><i class="fas fa-file-alt"></i> Resume</a>
+      <a class="nav-item" href="dashboard.html"><i class="fas fa-user"></i> Profile</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <a href="settings.html" class="settings-btn active"><i class="fas fa-cog"></i> Settings</a>
+    <a href="../frontpage/front.html" class="logout-btn">Logout</a>
+  </div>
+</header>
+
+<main>
+  <div class="settings-wrapper">
+    <h1 class="page-title">Settings</h1>
+
+    <div class="settings-card">
+
+      <!-- Notifications -->
+      <div class="settings-group">
+        <div class="group-title">
+          <i class="fas fa-bell"></i> Notifications
+        </div>
+
+        <div class="settings-row">
+          <span>Email Notifications</span>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <span>New Job Alerts</span>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="settings-row">
+          <span>Application Status Updates</span>
+          <label class="toggle">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="settings-group">
+        <div class="group-title">
+          <i class="fas fa-sliders-h"></i> Preferences
+        </div>
+
+        <div class="settings-row">
+          <span>Job Type</span>
+          <select class="settings-select">
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Internship</option>
+            <option>Contract</option>
+          </select>
+        </div>
+
+        <div class="settings-row">
+          <span>Location</span>
+          <select class="settings-select">
+            <option>Philadelphia, PA</option>
+            <option>New York, NY</option>
+            <option>Remote</option>
+            <option>Washington, DC</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Account -->
+      <div class="settings-group">
+        <div class="group-title">
+          <i class="fas fa-user-circle"></i> Account
+        </div>
+
+        <div class="settings-row">
+          <span>Change Password</span>
+          <button class="btn-update">Update</button>
+        </div>
+
+        <div class="settings-row">
+          <span>Delete Account</span>
+          <button class="btn-delete">Delete</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

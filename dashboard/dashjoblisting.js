@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function(){
 const searchInput = document.querySelector(".search-bar input")
 const jobList = document.querySelector(".job-list")         // NEW
 
+//Brian codes
 // NEW — create & inject "No results" message
 const noResultsMsg = document.createElement("p")
 noResultsMsg.id = "no-results-msg"
@@ -149,6 +150,7 @@ noResultsMsg.style.padding = "16px"
 noResultsMsg.style.color = "#666"
 noResultsMsg.style.fontStyle = "italic"
 jobList.appendChild(noResultsMsg)
+//Brian codes
 
 searchInput.addEventListener("input", function(){           // CHANGED: keyup → input
 
