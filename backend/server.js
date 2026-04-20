@@ -20,21 +20,52 @@ app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/pr
 
 // API Endpoints
 app.get("/api/jobs", async (req, res) => { 
+  const query = req.query.q || "software engineering internship";
   try {
     const response = await axios.get("https://serpapi.com/search.json", {
       params: {
         engine: "google_jobs",
-        q: "CS cybersecurity internships",
+        q: query,
         location: "United States",
         api_key: process.env.SERPAPI_KEY
       }
     });
-    res.json({ jobs_results: response.data.jobs_results });
+
+    const raw = response.data.jobs_results || [];
+
+    const formatted = raw.map(job => ({
+      job_id:      job.job_id   || null,
+      title:       job.title    || "Untitled Role",
+      company_name: job.company_name || "Unknown Company",
+      location:    job.location || "Location not listed",
+      description: formatDescription(job.description || ""),
+      detected_extensions: {
+        schedule_type:   job.detected_extensions?.schedule_type  || null,
+        salary:          job.detected_extensions?.salary         || null,
+        work_from_home:  job.detected_extensions?.work_from_home || false,
+        posted_at:       job.detected_extensions?.posted_at      || null,
+      },
+      job_highlights: job.job_highlights || [],
+      apply_options:  job.apply_options  || [],
+      share_link:     job.share_link     || null,
+    }));
+
+    res.json(formatted);
+
   } catch (err) {
     console.error("SerpApi error:", err.message);
     res.status(500).json({ error: "Failed to fetch jobs" });
   }
 });
+
+function formatDescription(raw) {
+  return raw
+    .replace(/([a-z\d])([A-Z])/g, "$1 $2")
+    .replace(/\.([A-Z])/g, ".\n\n$1")
+    .replace(/([?!])([A-Z])/g, "$1\n\n$2")
+    .replace(/ {2,}/g, " ")
+    .trim();
+}
 
 // Password validation rule
 function isValidPassword(password) {
