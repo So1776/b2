@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Internship Tracker – Internly</title>
+  <link rel="stylesheet" href="internshiptracker.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <div class="header-left">
+      <a href="../frontpage/front.html" class="logo">Internly</a>
+      <nav class="nav-top">
+        <span class="nav-item active"><i class="fas fa-clipboard-list"></i> Tracker</span>
+        <span class="nav-item" onclick="window.location.href='/dashboard'"><i class="fas fa-briefcase"></i> Jobs</span>
+        <span class="nav-item" onclick="window.location.href='/dashboard'"><i class="fas fa-file-alt"></i> Resume</span>
+      </nav>
+    </div>
+    <div class="header-right">
+      <a href="../frontpage/front.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </header>
+
+  <!-- ── PAGE BODY ── -->
+  <main class="tracker-main">
+
+    <!-- Page title + primary Add button -->
+    <div class="page-hero">
+      <div class="page-hero-text">
+        <h1>Internship Tracker</h1>
+        <p>Manage and monitor every application in one place.</p>
+      </div>
+      <button class="btn btn-primary" id="addBtn">
+        <i class="fas fa-plus"></i> Add Internship
+      </button>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-chip" id="statTotal"><span class="stat-num">0</span><span class="stat-label">Total</span></div>
+      <div class="stat-chip applied"><span class="stat-num" id="countApplied">0</span><span class="stat-label">Applied</span></div>
+      <div class="stat-chip interview"><span class="stat-num" id="countInterview">0</span><span class="stat-label">Interview</span></div>
+      <div class="stat-chip offer"><span class="stat-num" id="countOffer">0</span><span class="stat-label">Offer</span></div>
+      <div class="stat-chip rejected"><span class="stat-num" id="countRejected">0</span><span class="stat-label">Rejected</span></div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="filterInput" placeholder="Search company or role…" />
+      </div>
+      <div class="filter-pills" id="filterPills">
+        <button class="pill active" data-status="all">All</button>
+        <button class="pill" data-status="Applied">Applied</button>
+        <button class="pill" data-status="Interview">Interview</button>
+        <button class="pill" data-status="Offer">Offer</button>
+        <button class="pill" data-status="Rejected">Rejected</button>
+      </div>
+    </div>
+
+    <!-- Internship list table -->
+    <div class="table-wrap">
+      <table class="internship-table" id="internshipTable">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Date Applied</th>
+            <th>Status</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <i class="fas fa-inbox"></i>
+        <p>No internships found. Add one to get started!</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── ADD / EDIT MODAL ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close"><i class="fas fa-times"></i></button>
+      <h2 id="modalTitle">Add Internship</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fCompany">Company <span class="req">*</span></label>
+          <input type="text" id="fCompany" placeholder="e.g. Google" />
+          <span class="err-msg" id="errCompany"></span>
+        </div>
+        <div class="form-group">
+          <label for="fRole">Role <span class="req">*</span></label>
+          <input type="text" id="fRole" placeholder="e.g. Software Engineer Intern" />
+          <span class="err-msg" id="errRole"></span>
+        </div>
+        <div class="form-group">
+          <label for="fLocation">Location</label>
+          <input type="text" id="fLocation" placeholder="e.g. Remote, New York, NY" />
+        </div>
+        <div class="form-group">
+          <label for="fDate">Date Applied <span class="req">*</span></label>
+          <input type="date" id="fDate" />
+          <span class="err-msg" id="errDate"></span>
+        </div>
+        <div class="form-group full-width">
+          <label for="fStatus">Status</label>
+          <select id="fStatus">
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="form-group full-width">
+          <label for="fNotes">Notes</label>
+          <textarea id="fNotes" rows="3" placeholder="Any notes about this application…"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="saveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="internshiptracker.js"></script>
+</body>
+</html>

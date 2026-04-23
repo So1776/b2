@@ -1,0 +1,428 @@
+/* ── Internship Tracker – Brian Truong Issue ── */
+
+/* ── Variables ── */
+:root {
+  --navy:       #07294D;
+  --navy-light: #0a3563;
+  --gold:       #FFC600;
+  --gold-dark:  #e6b200;
+  --bg:         #f2f5f9;
+  --card:       #ffffff;
+  --border:     #e2e8f0;
+  --text:       #1e293b;
+  --muted:      #64748b;
+  --danger:     #ef4444;
+
+  --status-applied:   #3b82f6;
+  --status-interview: #f59e0b;
+  --status-offer:     #22c55e;
+  --status-rejected:  #ef4444;
+
+  --radius:  10px;
+  --shadow:  0 2px 12px rgba(0,0,0,0.08);
+  --shadow2: 0 8px 32px rgba(0,0,0,0.14);
+
+  font-family: 'DM Sans', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--navy);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header-left { display: flex; align-items: center; gap: 2rem; }
+
+.logo {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+}
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0%; height: 2px;
+  background: var(--gold);
+  transition: width .25s ease;
+}
+.logo:hover::after { width: 100%; }
+
+.nav-top { display: flex; gap: 1.5rem; }
+.nav-item {
+  display: flex; align-items: center; gap: .4rem;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: .92rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all .2s;
+}
+.nav-item:hover, .nav-item.active {
+  color: white;
+  background: rgba(255,255,255,0.12);
+}
+.nav-item.active { color: var(--gold); }
+
+.logout-btn {
+  background: var(--gold);
+  color: var(--navy);
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .88rem;
+  display: flex; align-items: center; gap: 6px;
+  transition: background .2s;
+}
+.logout-btn:hover { background: var(--gold-dark); }
+
+/* ── Main ── */
+.tracker-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 24px 60px;
+}
+
+/* ── Page Hero ── */
+.page-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.page-hero-text h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.1;
+}
+.page-hero-text p {
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: .95rem;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: .92rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .18s;
+}
+.btn-primary {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+.btn-primary:hover { background: var(--navy-light); }
+.btn-ghost {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--border);
+}
+.btn-ghost:hover { background: var(--bg); }
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+.btn-danger:hover { background: #dc2626; }
+
+/* ── Stats Bar ── */
+.stats-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.stat-chip {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 88px;
+  box-shadow: var(--shadow);
+  transition: transform .15s;
+}
+.stat-chip:hover { transform: translateY(-2px); }
+.stat-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.stat-label { font-size: .75rem; color: var(--muted); margin-top: 3px; font-weight: 500; }
+.stat-chip.applied  .stat-num { color: var(--status-applied); }
+.stat-chip.interview .stat-num { color: var(--status-interview); }
+.stat-chip.offer    .stat-num { color: var(--status-offer); }
+.stat-chip.rejected .stat-num { color: var(--status-rejected); }
+
+/* ── Filter Bar ── */
+.filter-bar {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 9px 18px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 340px;
+  box-shadow: var(--shadow);
+  transition: box-shadow .2s;
+}
+.search-wrap:focus-within {
+  box-shadow: 0 0 0 3px rgba(7,41,77,0.12);
+  border-color: var(--navy);
+}
+.search-wrap i { color: var(--muted); font-size: .85rem; }
+.search-wrap input {
+  border: none; outline: none;
+  font-family: inherit; font-size: .92rem;
+  background: transparent; width: 100%;
+}
+
+.filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 7px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all .15s;
+}
+.pill:hover { border-color: var(--navy); color: var(--navy); }
+.pill.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+}
+
+/* ── Table ── */
+.table-wrap {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.internship-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.internship-table thead {
+  background: var(--navy);
+  color: white;
+}
+.internship-table th {
+  padding: 13px 16px;
+  text-align: left;
+  font-size: .82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.internship-table td {
+  padding: 14px 16px;
+  font-size: .92rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.internship-table tbody tr:last-child td { border-bottom: none; }
+.internship-table tbody tr {
+  transition: background .15s;
+  animation: rowIn .3s ease forwards;
+}
+.internship-table tbody tr:hover { background: #f8fafc; }
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.td-company { font-weight: 600; color: var(--navy); }
+.td-role    { color: var(--text); }
+.td-location, .td-date { color: var(--muted); font-size: .88rem; }
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 3px 11px;
+  border-radius: 50px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.badge-Applied   { background: #dbeafe; color: #1d4ed8; }
+.badge-Interview { background: #fef3c7; color: #92400e; }
+.badge-Offer     { background: #dcfce7; color: #166534; }
+.badge-Rejected  { background: #fee2e2; color: #991b1b; }
+
+/* Action buttons in table */
+.actions-col { width: 110px; }
+.row-actions { display: flex; gap: 6px; }
+.icon-btn {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: white;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .82rem;
+  color: var(--muted);
+  transition: all .15s;
+}
+.icon-btn:hover.edit-btn  { border-color: var(--navy); color: var(--navy); background: #eef2ff; }
+.icon-btn:hover.del-btn   { border-color: var(--danger); color: var(--danger); background: #fee2e2; }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-state i { font-size: 2.5rem; margin-bottom: 12px; opacity: .4; display: block; }
+.empty-state p { font-size: 1rem; }
+
+/* ── Modals ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(7,41,77,0.45);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow2);
+  padding: 32px 36px;
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  animation: modalIn .25s ease;
+}
+.modal-sm { max-width: 380px; }
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.94) translateY(-12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal h2 {
+  font-family: 'Sora', sans-serif;
+  color: var(--navy);
+  font-size: 1.25rem;
+  margin-bottom: 22px;
+}
+.modal-sm p { color: var(--muted); margin-bottom: 24px; font-size: .93rem; }
+
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none;
+  color: var(--muted); cursor: pointer; font-size: 1rem;
+  width: 28px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.modal-close:hover { background: var(--bg); color: var(--text); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  margin-bottom: 24px;
+}
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { font-size: .83rem; font-weight: 600; color: var(--text); }
+.form-group .req { color: var(--danger); }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: .92rem;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  background: var(--bg);
+  color: var(--text);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(7,41,77,0.1);
+  background: white;
+}
+.form-group textarea { resize: vertical; }
+.err-msg { font-size: .78rem; color: var(--danger); min-height: 14px; }
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .internship-table thead th:nth-child(3),
+  .internship-table tbody td:nth-child(3),
+  .internship-table thead th:nth-child(4),
+  .internship-table tbody td:nth-child(4) { display: none; }
+  .form-grid { grid-template-columns: 1fr; }
+  .modal { padding: 24px 20px; }
+}
