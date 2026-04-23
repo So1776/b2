@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Saved Jobs</title>
+
+  <link rel="stylesheet" href="saved.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <div class="header-left">
+    <a href="../frontpage/front.html" class="logo">Internly</a>
+
+    <div class="nav-top">
+      <div class="nav-item" onclick="window.location.href='../dashboard/dashboard.html'">
+        <i class="fas fa-briefcase"></i> Jobs
+      </div>
+
+      <div class="nav-item" onclick="window.location.href='../resumeupload/resume.html'">
+        <i class="fas fa-file-alt"></i> Resume
+      </div>
+
+      <div class="nav-item active">
+        <i class="fas fa-bookmark"></i> Saved
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button class="settings-btn" onclick="window.location.href='../settingpage/setting.html'">
+      <i class="fas fa-cog"></i> Settings
+    </button>
+
+    <a href="../frontpage/front.html" class="logout">Logout</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="saved-section">
+    <h1>Saved Jobs</h1>
+    <p style="color:#352a2a;">Your saved jobs will appear here.</p>
+
+    <div id="savedJobsContainer" class="saved-jobs-container">
+      <!-- Saved job cards will be inserted here -->
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

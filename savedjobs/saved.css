@@ -1,0 +1,211 @@
+/* Rushdi Mohmmads Code */
+
+/* =========================
+            BASE
+========================= */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #333;
+}
+
+main {
+  padding: 30px;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  background: #07294D;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  position: relative;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.25s ease;
+}
+
+.logo:hover::after {
+  width: 100%;
+}
+
+.nav-top {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* =========================
+   NAV ITEMS (FIXED WHITE BOX)
+========================= */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+
+  -webkit-tap-highlight-color: transparent;
+
+  background: transparent;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* hover effect */
+.nav-item:hover {
+  text-decoration: underline;
+}
+
+/* active tab (NO BOX) */
+.nav-item.active {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* REMOVE WHITE CLICK BOX COMPLETELY */
+.nav-item:focus,
+.nav-item:active,
+.nav-item:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* extra safety override */
+.nav-item * {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================
+   RIGHT HEADER
+========================= */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+.settings-btn:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+.logout {
+  background: #FFC600;
+  color: #07294D;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* =========================
+   GLOBAL BUTTON FIX
+========================= */
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+button:focus,
+button:active,
+button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* =========================
+   SAVED PAGE CONTENT
+========================= */
+
+.saved-section h1 {
+  color: #07294D;
+  margin-bottom: 10px;
+}
+
+.saved-jobs-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Saved job cards */
+.saved-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: 0.2s ease;
+}
+
+.saved-card:hover {
+  transform: translateY(-3px);
+}
+
+/* =========================
+   OPTIONAL ANIMATION
+========================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

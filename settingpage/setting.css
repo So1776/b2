@@ -1,0 +1,274 @@
+/* Rushdi Mohmmads Code */
+
+/* =========================
+            BASE
+========================= */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #333;
+}
+
+main {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 50px 20px;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+/* =========================
+   HEADER (MATCH DASHBOARD)
+========================= */
+
+header {
+  background: #07294D;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  position: relative;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.25s ease;
+}
+
+.logo:hover::after {
+  width: 100%;
+}
+
+.nav-top {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  text-decoration: underline;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.settings-btn:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+/* =========================
+   LOGOUT BUTTON (FIXED)
+========================= */
+
+.logout-btn {
+  background: #FFC600;
+  color: #07294D;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logout-btn:hover {
+  background: #e6b200;
+}
+
+/* =========================
+   CENTER SETTINGS BOX
+========================= */
+
+.settings-wrapper {
+  width: 100%;
+  max-width: 700px;
+}
+
+.settings-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* =========================
+   SECTION GROUPS
+========================= */
+
+.settings-group {
+  padding: 25px 30px;
+}
+
+.settings-group + .settings-group {
+  border-top: 1px solid #e5e7eb;
+}
+
+.group-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+/* =========================
+   ROWS
+========================= */
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-row span {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+/* =========================
+   TOGGLE SWITCHES
+========================= */
+
+.toggle {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  display: inline-block;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 34px;
+  transition: 0.3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle input:checked + .slider {
+  background: #07294D;
+}
+
+.toggle input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.settings-select {
+  padding: 7px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-update {
+  background: #07294D;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-update:hover {
+  background: #0a3a6b;
+}
+
+.btn-delete {
+  background: #dc2626;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-delete:hover {
+  background: #b91c1c;
+}

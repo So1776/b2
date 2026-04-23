@@ -3,8 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>Settings – Internly</title>
-  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="setting.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* Remove all link underlines */
+    a {
+      text-decoration: none;
+    }
+
+    .logo,
+    .nav-item,
+    .settings-btn,
+    .logout-btn {
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -12,14 +26,17 @@
   <div class="header-left">
     <a href="../frontpage/front.html" class="logo">Internly</a>
     <nav class="nav-top">
-      <a class="nav-item" href="dashboard.html"><i class="fas fa-briefcase"></i> Jobs</a>
-      <a class="nav-item" href="dashboard.html"><i class="fas fa-file-alt"></i> Resume</a>
-      <a class="nav-item" href="dashboard.html"><i class="fas fa-user"></i> Profile</a>
+      <a class="nav-item" href="../dashboard/dashboard.html"><i class="fas fa-briefcase"></i> Jobs</a>
+      <a class="nav-item" href="../resumeupload/resume.html"><i class="fas fa-file-alt"></i> Resume</a>
+      <a class="nav-item" href="../savedjobs/saved.html"><i class="fas fa-user"></i> Saved</a>
     </nav>
   </div>
+
   <div class="header-right">
-    <a href="settings.html" class="settings-btn active"><i class="fas fa-cog"></i> Settings</a>
-    <a href="../frontpage/front.html" class="logout-btn">Logout</a>
+    <a href="../settingpage/setting.html" class="settings-btn active"><i class="fas fa-cog"></i> Settings</a>
+    <a href="../frontpage/front.html" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
   </div>
 </header>
 
