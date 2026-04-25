@@ -1,5 +1,15 @@
-/* ── Internship Tracker – Brian Truong Issue ── */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Internly – Internship Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+<style>
 /* ── Variables ── */
 :root {
   --navy:       #07294D;
@@ -12,6 +22,7 @@
   --text:       #1e293b;
   --muted:      #64748b;
   --danger:     #ef4444;
+  --success:    #22c55e;
 
   --status-applied:   #3b82f6;
   --status-interview: #f59e0b;
@@ -95,6 +106,8 @@ body {
   font-size: .88rem;
   display: flex; align-items: center; gap: 6px;
   transition: background .2s;
+  cursor: pointer;
+  border: none;
 }
 .logout-btn:hover { background: var(--gold-dark); }
 
@@ -145,18 +158,48 @@ body {
   border-color: var(--navy);
 }
 .btn-primary:hover { background: var(--navy-light); }
+
 .btn-ghost {
   background: transparent;
   color: var(--navy);
   border-color: var(--border);
 }
 .btn-ghost:hover { background: var(--bg); }
+
 .btn-danger {
   background: var(--danger);
   color: white;
   border-color: var(--danger);
 }
 .btn-danger:hover { background: #dc2626; }
+
+/* ── UPDATE BUTTON ── */
+.btn-update {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+.btn-update:hover {
+  background: var(--gold-dark);
+  border-color: var(--gold-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255,198,0,0.35);
+}
+.btn-update:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+.btn-update.loading {
+  opacity: .75;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn-update.success {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+  pointer-events: none;
+}
 
 /* ── Stats Bar ── */
 .stats-bar {
@@ -186,10 +229,10 @@ body {
   line-height: 1;
 }
 .stat-label { font-size: .75rem; color: var(--muted); margin-top: 3px; font-weight: 500; }
-.stat-chip.applied  .stat-num { color: var(--status-applied); }
+.stat-chip.applied   .stat-num { color: var(--status-applied); }
 .stat-chip.interview .stat-num { color: var(--status-interview); }
-.stat-chip.offer    .stat-num { color: var(--status-offer); }
-.stat-chip.rejected .stat-num { color: var(--status-rejected); }
+.stat-chip.offer     .stat-num { color: var(--status-offer); }
+.stat-chip.rejected  .stat-num { color: var(--status-rejected); }
 
 /* ── Filter Bar ── */
 .filter-bar {
@@ -305,7 +348,7 @@ body {
 .badge-Rejected  { background: #fee2e2; color: #991b1b; }
 
 /* Action buttons in table */
-.actions-col { width: 110px; }
+.actions-col { width: 130px; }
 .row-actions { display: flex; gap: 6px; }
 .icon-btn {
   width: 32px; height: 32px;
@@ -318,8 +361,9 @@ body {
   color: var(--muted);
   transition: all .15s;
 }
-.icon-btn:hover.edit-btn  { border-color: var(--navy); color: var(--navy); background: #eef2ff; }
-.icon-btn:hover.del-btn   { border-color: var(--danger); color: var(--danger); background: #fee2e2; }
+.icon-btn:hover.edit-btn   { border-color: var(--navy); color: var(--navy); background: #eef2ff; }
+.icon-btn:hover.del-btn    { border-color: var(--danger); color: var(--danger); background: #fee2e2; }
+.icon-btn:hover.update-btn { border-color: var(--gold-dark); color: var(--navy); background: #fff8d6; }
 
 /* Empty state */
 .empty-state {
@@ -417,6 +461,40 @@ body {
   gap: 10px;
 }
 
+/* ── Spinner ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 14px; height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  background: var(--navy);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow2);
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast i { color: var(--gold); }
+
 /* ── Responsive ── */
 @media (max-width: 700px) {
   .internship-table thead th:nth-child(3),
@@ -425,4 +503,376 @@ body {
   .internship-table tbody td:nth-child(4) { display: none; }
   .form-grid { grid-template-columns: 1fr; }
   .modal { padding: 24px 20px; }
+  .site-header { padding: 12px 16px; }
+  .tracker-main { padding: 24px 16px 48px; }
 }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-left">
+    <a href="#" class="logo">Internly</a>
+    <nav class="nav-top">
+      <span class="nav-item active"><i class="fa-solid fa-briefcase"></i> Applications</span>
+      <span class="nav-item"><i class="fa-solid fa-chart-line"></i> Stats</span>
+      <span class="nav-item"><i class="fa-solid fa-bell"></i> Reminders</span>
+    </nav>
+  </div>
+  <button class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+</header>
+
+<!-- ── Main ── -->
+<main class="tracker-main">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-hero-text">
+      <h1>My Applications</h1>
+      <p>Track and manage your internship applications in one place.</p>
+    </div>
+    <button class="btn btn-primary" onclick="openAddModal()">
+      <i class="fa-solid fa-plus"></i> Add Application
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar"></div>
+
+  <!-- Filter -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search company or role…" oninput="renderTable()" />
+    </div>
+    <div class="filter-pills" id="filterPills">
+      <button class="pill active" data-filter="All" onclick="setFilter('All', this)">All</button>
+      <button class="pill" data-filter="Applied"   onclick="setFilter('Applied', this)">Applied</button>
+      <button class="pill" data-filter="Interview" onclick="setFilter('Interview', this)">Interview</button>
+      <button class="pill" data-filter="Offer"     onclick="setFilter('Offer', this)">Offer</button>
+      <button class="pill" data-filter="Rejected"  onclick="setFilter('Rejected', this)">Rejected</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table class="internship-table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Location</th>
+          <th>Applied</th>
+          <th>Status</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ── Add / Edit Modal ── -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeFormModal()"><i class="fa-solid fa-xmark"></i></button>
+    <h2 id="formModalTitle">Add Application</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Company <span class="req">*</span></label>
+        <input type="text" id="fCompany" placeholder="e.g. Google" />
+        <span class="err-msg" id="errCompany"></span>
+      </div>
+      <div class="form-group">
+        <label>Role <span class="req">*</span></label>
+        <input type="text" id="fRole" placeholder="e.g. SWE Intern" />
+        <span class="err-msg" id="errRole"></span>
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="fLocation" placeholder="e.g. Remote" />
+      </div>
+      <div class="form-group">
+        <label>Date Applied</label>
+        <input type="date" id="fDate" />
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="fStatus">
+          <option value="Applied">Applied</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Link</label>
+        <input type="url" id="fLink" placeholder="https://…" />
+      </div>
+      <div class="form-group full-width">
+        <label>Notes</label>
+        <textarea id="fNotes" rows="3" placeholder="Recruiter name, referral, interview notes…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeFormModal()">Cancel</button>
+      <!-- UPDATE BUTTON in modal footer -->
+      <button class="btn btn-update" id="formSubmitBtn" onclick="submitForm()">
+        <i class="fa-solid fa-rotate-right"></i>
+        <span id="formSubmitLabel">Update</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete Confirm Modal ── -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal modal-sm">
+    <button class="modal-close" onclick="closeDeleteModal()"><i class="fa-solid fa-xmark"></i></button>
+    <h2>Delete Application?</h2>
+    <p>This will permanently remove the application from your tracker. This action cannot be undone.</p>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()"><i class="fa-solid fa-trash"></i> Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg"></span></div>
+
+<script>
+/* ── Data ── */
+let apps = [
+  { id: 1, company: 'Google', role: 'SWE Intern', location: 'Mountain View, CA', date: '2025-01-10', status: 'Interview', link: '', notes: 'Phone screen scheduled.' },
+  { id: 2, company: 'Microsoft', role: 'PM Intern', location: 'Redmond, WA', date: '2025-01-05', status: 'Applied', link: '', notes: '' },
+  { id: 3, company: 'Abbott', role: 'Software Co-op', location: 'Remote', date: '2024-12-20', status: 'Offer', link: '', notes: 'Accepted!' },
+  { id: 4, company: 'Axal', role: 'Front-End Intern', location: 'Remote', date: '2024-11-15', status: 'Rejected', link: '', notes: '' },
+];
+let nextId = 5;
+let activeFilter = 'All';
+let editingId = null;
+let deletingId = null;
+
+/* ── Stats ── */
+function renderStats() {
+  const counts = { Applied: 0, Interview: 0, Offer: 0, Rejected: 0 };
+  apps.forEach(a => counts[a.status]++);
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-chip"><span class="stat-num">${apps.length}</span><span class="stat-label">Total</span></div>
+    <div class="stat-chip applied"><span class="stat-num">${counts.Applied}</span><span class="stat-label">Applied</span></div>
+    <div class="stat-chip interview"><span class="stat-num">${counts.Interview}</span><span class="stat-label">Interview</span></div>
+    <div class="stat-chip offer"><span class="stat-num">${counts.Offer}</span><span class="stat-label">Offer</span></div>
+    <div class="stat-chip rejected"><span class="stat-num">${counts.Rejected}</span><span class="stat-label">Rejected</span></div>
+  `;
+}
+
+/* ── Filter ── */
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+/* ── Table ── */
+function renderTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = apps.filter(a => {
+    const matchFilter = activeFilter === 'All' || a.status === activeFilter;
+    const matchSearch = !q || a.company.toLowerCase().includes(q) || a.role.toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  const tbody = document.getElementById('tableBody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No applications found.</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(a => `
+    <tr>
+      <td class="td-company">${esc(a.company)}</td>
+      <td class="td-role">${esc(a.role)}</td>
+      <td class="td-location">${esc(a.location || '—')}</td>
+      <td class="td-date">${a.date ? formatDate(a.date) : '—'}</td>
+      <td><span class="badge badge-${a.status}">${a.status}</span></td>
+      <td class="actions-col">
+        <div class="row-actions">
+          <button class="icon-btn edit-btn" title="Edit" onclick="openEditModal(${a.id})">
+            <i class="fa-solid fa-pen fa-xs"></i>
+          </button>
+          <button class="icon-btn update-btn" title="Update status" onclick="quickCycleStatus(${a.id}, this)">
+            <i class="fa-solid fa-rotate-right fa-xs"></i>
+          </button>
+          <button class="icon-btn del-btn" title="Delete" onclick="openDeleteModal(${a.id})">
+            <i class="fa-solid fa-trash fa-xs"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ── Quick cycle status (icon update button) ── */
+const statusOrder = ['Applied', 'Interview', 'Offer', 'Rejected'];
+function quickCycleStatus(id, btn) {
+  const app = apps.find(a => a.id === id);
+  if (!app) return;
+  btn.classList.add('update-btn');
+  btn.style.pointerEvents = 'none';
+  btn.innerHTML = '<div style="width:13px;height:13px;border:2px solid var(--navy);border-top-color:transparent;border-radius:50%;animation:spin .5s linear infinite;"></div>';
+  setTimeout(() => {
+    const idx = statusOrder.indexOf(app.status);
+    app.status = statusOrder[(idx + 1) % statusOrder.length];
+    renderStats();
+    renderTable();
+    showToast(`Status updated to "${app.status}"`);
+  }, 600);
+}
+
+/* ── Add Modal ── */
+function openAddModal() {
+  editingId = null;
+  document.getElementById('formModalTitle').textContent = 'Add Application';
+  document.getElementById('formSubmitLabel').textContent = 'Add Application';
+  document.getElementById('formSubmitBtn').className = 'btn btn-primary';
+  document.getElementById('formSubmitBtn').innerHTML = '<i class="fa-solid fa-plus"></i> <span id="formSubmitLabel">Add Application</span>';
+  clearForm();
+  document.getElementById('formModal').classList.add('open');
+}
+
+/* ── Edit Modal ── */
+function openEditModal(id) {
+  const app = apps.find(a => a.id === id);
+  if (!app) return;
+  editingId = id;
+  document.getElementById('formModalTitle').textContent = 'Update Application';
+  document.getElementById('formSubmitBtn').className = 'btn btn-update';
+  document.getElementById('formSubmitBtn').innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span id="formSubmitLabel">Update</span>';
+  document.getElementById('fCompany').value  = app.company;
+  document.getElementById('fRole').value     = app.role;
+  document.getElementById('fLocation').value = app.location;
+  document.getElementById('fDate').value     = app.date;
+  document.getElementById('fStatus').value   = app.status;
+  document.getElementById('fLink').value     = app.link;
+  document.getElementById('fNotes').value    = app.notes;
+  clearErrors();
+  document.getElementById('formModal').classList.add('open');
+}
+
+function closeFormModal() {
+  document.getElementById('formModal').classList.remove('open');
+}
+
+/* ── Form submit with Update animation ── */
+function submitForm() {
+  const company = document.getElementById('fCompany').value.trim();
+  const role    = document.getElementById('fRole').value.trim();
+  let valid = true;
+  clearErrors();
+  if (!company) { document.getElementById('errCompany').textContent = 'Company is required.'; valid = false; }
+  if (!role)    { document.getElementById('errRole').textContent = 'Role is required.'; valid = false; }
+  if (!valid) return;
+
+  const btn = document.getElementById('formSubmitBtn');
+  const isEdit = editingId !== null;
+
+  /* Loading state */
+  btn.classList.add('loading');
+  btn.innerHTML = '<div class="spinner"></div> ' + (isEdit ? 'Updating…' : 'Adding…');
+
+  setTimeout(() => {
+    if (isEdit) {
+      const app = apps.find(a => a.id === editingId);
+      app.company  = company;
+      app.role     = document.getElementById('fRole').value.trim();
+      app.location = document.getElementById('fLocation').value.trim();
+      app.date     = document.getElementById('fDate').value;
+      app.status   = document.getElementById('fStatus').value;
+      app.link     = document.getElementById('fLink').value.trim();
+      app.notes    = document.getElementById('fNotes').value.trim();
+      showToast('Application updated successfully!');
+    } else {
+      apps.push({
+        id: nextId++,
+        company,
+        role:     document.getElementById('fRole').value.trim(),
+        location: document.getElementById('fLocation').value.trim(),
+        date:     document.getElementById('fDate').value,
+        status:   document.getElementById('fStatus').value,
+        link:     document.getElementById('fLink').value.trim(),
+        notes:    document.getElementById('fNotes').value.trim(),
+      });
+      showToast('Application added successfully!');
+    }
+
+    /* Success state */
+    btn.classList.remove('loading');
+    btn.classList.add('success');
+    btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Done!';
+
+    renderStats();
+    renderTable();
+
+    setTimeout(() => {
+      closeFormModal();
+      btn.classList.remove('success');
+    }, 800);
+  }, 900);
+}
+
+/* ── Delete Modal ── */
+function openDeleteModal(id) {
+  deletingId = id;
+  document.getElementById('deleteModal').classList.add('open');
+}
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  deletingId = null;
+}
+function confirmDelete() {
+  apps = apps.filter(a => a.id !== deletingId);
+  closeDeleteModal();
+  renderStats();
+  renderTable();
+  showToast('Application deleted.');
+}
+
+/* ── Helpers ── */
+function clearForm() {
+  ['fCompany','fRole','fLocation','fDate','fLink','fNotes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fStatus').value = 'Applied';
+  clearErrors();
+}
+function clearErrors() {
+  ['errCompany','errRole'].forEach(id => document.getElementById(id).textContent = '');
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatDate(d) {
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ── Close modals on overlay click ── */
+document.getElementById('formModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeFormModal(); });
+document.getElementById('deleteModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDeleteModal(); });
+
+/* ── Init ── */
+renderStats();
+renderTable();
+</script>
+</body>
+</html>
