@@ -217,6 +217,46 @@ app.get("/change-password", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontpage", "changePassword.html"));
 });
 
+app.get("/resume-page", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "dashboard", "resume.html"));
+});
+
+// Allow the logged-in user to view their resume
+app.get("/resume/view", (req, res) => {
+  // accept token from Authorization header OR ?token= query param
+  const authHeader = req.headers.authorization || "";
+  const queryToken = req.query.token || "";
+  const token = authHeader.startsWith("Bearer ") 
+    ? authHeader.split(" ")[1] 
+    : queryToken;
+
+  if (!token) return res.status(401).json({ error: "No token provided" });
+
+  let decoded;
+  try {
+    const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_later";
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (e) {
+    return res.status(401).json({ error: "Invalid or expired token" });
+  }
+
+  const userId = decoded.user_id;
+
+  db.get(
+    `SELECT original_filename, mime_type, upload_path
+     FROM resumes WHERE user_id = ? LIMIT 1`,
+    [userId],
+    (err, row) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!row) return res.status(404).json({ error: "No resume found" });
+
+      res.setHeader("Content-Type", row.mime_type);
+      res.setHeader("Content-Disposition", `inline; filename="${row.original_filename}"`);
+      res.sendFile(path.resolve(row.upload_path));
+    }
+  );
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });

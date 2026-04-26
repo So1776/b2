@@ -1,0 +1,341 @@
+<!-- Resume Page, Author: Caleb Perez, 04/26/26 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Resume</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/dashboard/dashboard.css"/>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-left">
+    <a href="/dashboard" class="logo">Internly</a>
+  </div>
+  <div class="header-right">
+    <button class="settings-btn"><i class="fas fa-gear"></i> Settings</button>
+    <a href="/login" class="logout" id="logout-btn">Logout</a>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main style="max-width:680px; margin:40px auto; padding:0 20px;">
+
+  <a href="/dashboard" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Dashboard
+  </a>
+
+  <div class="page-title">
+    <i class="fas fa-file-alt"></i>
+    <h2>My Resume</h2>
+  </div>
+
+  <!-- current resume card -->
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-file-alt"></i> Current Resume
+    </div>
+    <div class="card-body">
+
+      <div id="spinner" class="spinner-wrap">
+        <div class="spinner"></div>
+      </div>
+
+     <div id="current-resume" style="display:none;">
+  <div class="resume-row">
+    <i class="fas fa-file-alt resume-row-icon"></i>
+    <div class="resume-row-info">
+      <div class="resume-row-name" id="res-filename"></div>
+      <div class="resume-row-meta" id="res-meta"></div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-view" onclick="viewResume()">
+        <i class="fas fa-eye"></i> View
+      </button>
+      <button class="btn btn-danger" id="delete-btn" onclick="deleteResume()">
+        <i class="fas fa-trash-alt"></i> Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+      <div id="empty-state" style="display:none;" class="empty-state">
+        <i class="fas fa-file-circle-plus"></i>
+        <p>No resume uploaded yet.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- upload card -->
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-arrow-up-from-bracket"></i> Upload Resume
+    </div>
+    <div class="card-body">
+
+      <ul class="rules">
+        <li><i class="fas fa-check-circle"></i> Accepted formats: PDF, DOC, DOCX</li>
+        <li><i class="fas fa-check-circle"></i> Maximum file size: 5 MB</li>
+        <li><i class="fas fa-check-circle"></i> Uploading a new file will replace your current resume</li>
+      </ul>
+
+      <div style="margin-top:18px;">
+
+        <div id="dropzone" class="dropzone"
+             ondragover="onDragOver(event)"
+             ondragleave="onDragLeave()"
+             ondrop="onDrop(event)"
+             onclick="document.getElementById('file-input').click()">
+          <i class="fas fa-cloud-arrow-up"></i>
+          <p>Drag &amp; drop your resume here, or <span class="browse-link">browse</span></p>
+          <p class="hint">PDF, DOC, or DOCX &nbsp;·&nbsp; Max 5 MB</p>
+        </div>
+
+        <input id="file-input" type="file"
+               accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+               style="display:none" onchange="onFileChosen(event)">
+
+        <div id="selected-wrap" class="selected-wrap" style="display:none;">
+          <i class="fas fa-file-circle-check sel-icon"></i>
+          <div class="sel-info">
+            <div class="sel-name" id="sel-name"></div>
+            <div class="sel-size" id="sel-size"></div>
+          </div>
+          <button class="clear-btn" onclick="clearSelection()" aria-label="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div id="progress-wrap" class="progress-wrap" style="display:none;">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+
+        <div id="alert-box" class="alert" style="display:none;"></div>
+
+        <button id="upload-btn" class="btn btn-primary btn-full"
+                onclick="uploadResume()" disabled>
+          <i class="fas fa-arrow-up-from-bracket"></i> Upload Resume
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const ALLOWED_TYPES = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ];
+  const ALLOWED_EXT = /\.(pdf|doc|docx)$/i;
+  const MAX_SIZE    = 5 * 1024 * 1024;
+
+  let selectedFile = null;
+
+  function getToken() {
+    return localStorage.getItem('token') || '';
+  }
+
+  function fmtSize(bytes) {
+    if (bytes < 1024)        return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function showAlert(msg, type = 'error') {
+    const el = document.getElementById('alert-box');
+    el.textContent   = msg;
+    el.className     = 'alert alert-' + type;
+    el.style.display = 'block';
+  }
+
+  function clearAlert() {
+    document.getElementById('alert-box').style.display = 'none';
+  }
+
+  function loadResume() {
+    document.getElementById('spinner').style.display        = 'flex';
+    document.getElementById('current-resume').style.display = 'none';
+    document.getElementById('empty-state').style.display    = 'none';
+
+    fetch('/resume', {
+      headers: { 'Authorization': 'Bearer ' + getToken() }
+    })
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('spinner').style.display = 'none';
+        if (data.resume) {
+          document.getElementById('res-filename').textContent = data.resume.original_filename;
+          document.getElementById('res-meta').textContent =
+            fmtSize(data.resume.size) + '  ·  Uploaded ' +
+            new Date(data.resume.uploaded_at).toLocaleDateString('en-US', {
+              month: 'short', day: 'numeric', year: 'numeric'
+            });
+          document.getElementById('current-resume').style.display = 'block';
+        } else {
+          document.getElementById('empty-state').style.display = 'block';
+        }
+      })
+      .catch(() => {
+        document.getElementById('spinner').style.display     = 'none';
+        document.getElementById('empty-state').style.display = 'block';
+      });
+  }
+
+  function deleteResume() {
+    const btn = document.getElementById('delete-btn');
+
+    if (btn.dataset.confirm !== 'yes') {
+      btn.innerHTML       = '<i class="fas fa-triangle-exclamation"></i> Confirm?';
+      btn.dataset.confirm = 'yes';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+        delete btn.dataset.confirm;
+      }, 3000);
+      return;
+    }
+
+    btn.disabled = true;
+    clearAlert();
+
+    fetch('/resume', {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + getToken() }
+    })
+      .then(r => r.json())
+      .then(data => {
+        btn.disabled = false;
+        delete btn.dataset.confirm;
+        if (data.message) {
+          document.getElementById('current-resume').style.display = 'none';
+          document.getElementById('empty-state').style.display    = 'block';
+          showAlert('Resume deleted successfully.', 'success');
+        } else {
+          showAlert(data.error || 'Delete failed.');
+        }
+      })
+      .catch(() => {
+        btn.disabled = false;
+        showAlert('Network error — could not delete.');
+      });
+  }
+
+  function viewResume() {
+  const token = getToken();
+  // open in new tab — we pass the token as a query paramater since we can't set Authorization headers on a plain window.open request
+  window.open(`/resume/view?token=${token}`, '_blank');
+}
+
+  function onDragOver(e) {
+    e.preventDefault();
+    document.getElementById('dropzone').classList.add('drag-over');
+  }
+
+  function onDragLeave() {
+    document.getElementById('dropzone').classList.remove('drag-over');
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropzone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+  }
+
+  function onFileChosen(e) {
+    const file = e.target.files[0];
+    if (file) processFile(file);
+  }
+
+  function processFile(file) {
+    clearAlert();
+    if (!ALLOWED_EXT.test(file.name) && !ALLOWED_TYPES.includes(file.type)) {
+      showAlert('Only PDF, DOC, or DOCX files are allowed.');
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      showAlert('File is too large (' + fmtSize(file.size) + '). Maximum size is 5 MB.');
+      return;
+    }
+    selectedFile = file;
+    document.getElementById('sel-name').textContent        = file.name;
+    document.getElementById('sel-size').textContent        = fmtSize(file.size);
+    document.getElementById('selected-wrap').style.display = 'flex';
+    document.getElementById('upload-btn').disabled         = false;
+  }
+
+  function clearSelection() {
+    selectedFile = null;
+    document.getElementById('file-input').value            = '';
+    document.getElementById('selected-wrap').style.display = 'none';
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.getElementById('progress-bar').style.width    = '0%';
+    document.getElementById('upload-btn').disabled         = true;
+    clearAlert();
+  }
+
+  function uploadResume() {
+    if (!selectedFile) return;
+    clearAlert();
+
+    const formData = new FormData();
+    formData.append('resume', selectedFile);
+
+    const btn      = document.getElementById('upload-btn');
+    const progWrap = document.getElementById('progress-wrap');
+    const progBar  = document.getElementById('progress-bar');
+
+    btn.disabled           = true;
+    progWrap.style.display = 'block';
+    progBar.style.width    = '0%';
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/resume/upload');
+    xhr.setRequestHeader('Authorization', 'Bearer ' + getToken());
+
+    xhr.upload.addEventListener('progress', function (e) {
+      if (e.lengthComputable) {
+        progBar.style.width = Math.round((e.loaded / e.total) * 100) + '%';
+      }
+    });
+
+    xhr.addEventListener('load', function () {
+      btn.disabled = false;
+      const data   = JSON.parse(xhr.responseText);
+      if (xhr.status === 201) {
+        showAlert('Resume uploaded successfully!', 'success');
+        clearSelection();
+        loadResume();
+      } else {
+        progWrap.style.display = 'none';
+        showAlert(data.error || 'Upload failed. Please try again.');
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      btn.disabled           = false;
+      progWrap.style.display = 'none';
+      showAlert('Network error — upload could not complete.');
+    });
+
+    xhr.send(formData);
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', function (e) {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  });
+
+  loadResume();
+</script>
+
+</body>
+</html>
