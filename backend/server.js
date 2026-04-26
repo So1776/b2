@@ -225,6 +225,10 @@ app.get("/settings", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "settingpage", "setting.html"));
 });
 
+app.get("/saved", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "savedjobs", "saved.html"));
+});
+
 // Allow the logged-in user to view their resume
 app.get("/resume/view", (req, res) => {
   // accept token from Authorization header OR ?token= query param

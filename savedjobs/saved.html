@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>Saved Jobs</title>
 
-  <link rel="stylesheet" href="saved.css">
+    <!-- Modified by; Caleb Perez, 04/26/26 -->
+  <link rel="stylesheet" href="/savedjobs/saved.css">
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -15,14 +16,15 @@
   <div class="header-left">
     <a href="../dashboard/dashboard.html" class="logo">Internly</a>
 
-    <div class="nav-top">
-      <div class="nav-item" onclick="window.location.href='../dashboard/dashboard.html'">
-        <i class="fas fa-briefcase"></i> Jobs
-      </div>
+<!-- Nav links Modified by Caleb Perez, 04/26/26 -->
 
-      <div class="nav-item" onclick="window.location.href='../resumeupload/resume.html'">
-        <i class="fas fa-file-alt"></i> Resume
-      </div>
+    <div class="nav-item" onclick="window.location.href='/dashboard'">
+  <i class="fas fa-briefcase"></i> Jobs
+</div>
+
+     <div class="nav-item" onclick="window.location.href='/resume-page'">
+  <i class="fas fa-file-alt"></i> Resume
+</div>
 
       <div class="nav-item active">
         <i class="fas fa-bookmark"></i> Saved
@@ -31,14 +33,12 @@
   </div>
 
   <div class="header-right">
-    <button class="settings-btn" onclick="window.location.href='../settingpage/setting.html'">
+    <button class="settings-btn" onclick="window.location.href='/settings'">
       <i class="fas fa-cog"></i> Settings
     </button>
-
-    <a href="../frontpage/front.html" class="logout">Logout</a>
+    <a href="/login" class="logout">Logout</a>
   </div>
 </header>
-
 <main>
 
   <section class="saved-section">
