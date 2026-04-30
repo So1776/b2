@@ -20,25 +20,6 @@ let internships  = [];   // full list from server
 let editingId    = null; // null = add mode, number = edit mode
 let activeFilter = "all";
 
-function loadSavedFromLocalStorage() {
-  const local = JSON.parse(localStorage.getItem("savedInternships")) || [];
-
-  // Convert saved jobs into tracker-compatible format
-  const formatted = local.map(job => ({
-    id: job.id || Date.now() + Math.random(),
-    company: job.company || job.title || "Unknown Company",
-    role: job.role || job.title || "Unknown Role",
-    location: job.location || "Saved from Jobs page",
-    date_applied: job.date_applied || "",
-    status: job.status || "Applied",
-    notes: job.notes || ""
-  }));
-
-  internships = [...formatted, ...internships];
-
-  renderAll();
-}
-
 // ── DOM refs ─────────────────────────────────────────────────────────────────
 const tableBody     = document.getElementById("tableBody");
 const emptyState    = document.getElementById("emptyState");
@@ -229,12 +210,12 @@ function openEditModal(id) {
 }
 
 function openModal() {
-  modalOverlay.classList.add("active");
+  modalOverlay.classList.add("open");
   fCompany.focus();
 }
 
 function closeModal() {
-  modalOverlay.classList.remove("active");
+  modalOverlay.classList.remove("open");
   clearForm();
   editingId = null;
 }
@@ -364,7 +345,7 @@ modalOverlay.addEventListener("click", (e) => {
 
 // Close modal on Escape key
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && modalOverlay.classList.contains("active")) closeModal();
+  if (e.key === "Escape" && modalOverlay.classList.contains("open")) closeModal();
 });
 
 // Filter pills
@@ -382,6 +363,4 @@ filterInput.addEventListener("input", renderTable);
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
-fetchInternships().then(() => {
-  loadSavedFromLocalStorage();
-});
+fetchInternships();
