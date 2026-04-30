@@ -115,6 +115,8 @@ db.serialize(() => {
     }
   });
 
+
+
   // Create index for faster lookups
   db.run(`
     CREATE INDEX IF NOT EXISTS idx_resumes_user_id 
@@ -128,10 +130,11 @@ db.serialize(() => {
   });
 });
 
-const uploadDir = path.join(__dirname, "uploads/resumes");
-// --- Profile picture upload directory ---
-const profilePicDir = path.join(__dirname, "uploads/profile_pics");
-if (!fs.existsSync(profilePicDir)) {
+
+  const uploadDir = path.join(__dirname, "uploads/resumes");
+  // --- Profile picture upload directory ---
+  const profilePicDir = path.join(__dirname, "uploads/profile_pics");
+  if (!fs.existsSync(profilePicDir)) {
   fs.mkdirSync(profilePicDir, { recursive: true });
   console.log("✅ Created profile_pics directory");
 }

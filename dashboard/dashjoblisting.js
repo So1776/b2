@@ -134,6 +134,26 @@ document.getElementById("commCircle").style.background =
 
 }
 
+function saveJob() {
+    const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+
+    const newJob = {
+        id: Date.now(),
+        title: document.getElementById("jobTitle").innerText,
+        salary: document.getElementById("jobSalary").innerText,
+        description: document.getElementById("jobDesc").innerText,
+        location: document.getElementById("jobMeta").innerText
+    };
+
+    // Prevent duplicates
+    if (!savedJobs.some(job => job.title === newJob.title)) {
+        savedJobs.push(newJob);
+        localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+        alert("Job saved successfully!");
+    } else {
+        alert("Job already saved.");
+    }
+}
 
 document.addEventListener("DOMContentLoaded", function(){
 

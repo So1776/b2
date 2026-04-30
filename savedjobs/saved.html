@@ -52,5 +52,54 @@
 
 </main>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  const container = document.getElementById("savedJobsContainer");
+
+  // Get saved jobs from localStorage
+  const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+
+  // Empty state
+  if (savedJobs.length === 0) {
+    container.innerHTML = "<p>No saved jobs yet.</p>";
+    return;
+  }
+
+  // Render each saved job
+  savedJobs.forEach(job => {
+    const card = document.createElement("div");
+    card.className = "saved-job-card";
+
+    card.innerHTML = `
+      <h2>${job.title}</h2>
+      <p><strong>Salary:</strong> ${job.salary}</p>
+      <p><strong>Location:</strong> ${job.location}</p>
+      <p>${job.description}</p>
+      <button class="remove-btn">Remove</button>
+    `;
+
+    // Remove button
+    card.querySelector(".remove-btn").addEventListener("click", function() {
+      removeJob(job.id);
+    });
+
+    container.appendChild(card);
+  });
+
+});
+
+// Remove function
+function removeJob(id) {
+  let savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+
+  savedJobs = savedJobs.filter(job => job.id !== id);
+
+  localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+
+  location.reload();
+}
+</script>
+
 </body>
 </html>
