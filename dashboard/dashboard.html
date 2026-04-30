@@ -85,18 +85,25 @@
   <h3>Experience Needed</h3>
   <ul id="jobExperience"></ul>
 
+<!-- Skill circles Modified by Caleb Perez, 04/30/26 -->
+
   <div class="skill-circles">
     <div class="circle" id="expCircle">
       <div class="inner" id="expPercent">—</div>
       <p>Experience</p>
     </div>
+
+
     <div class="circle" id="skillCircle">
       <div class="inner" id="skillPercent">—</div>
       <p>Industry Skill</p>
     </div>
+
+    <div class="equals-sign">=</div>
+
     <div class="circle" id="commCircle">
       <div class="inner" id="commPercent">—</div>
-      <p>Communication</p>
+      <p>Resume Match</p>
     </div>
   </div>
 
@@ -226,10 +233,20 @@ const res = await fetch(url);
     renderUL('jobTasks', getHighlightItems(job, 'Responsibilities'), 5);
     renderUL('jobExperience', getHighlightItems(job, 'Qualifications'), 5);
 
-    const c = deriveCircleValues(job);
-    setText('expPercent', c.experience + '%');
-    setText('skillPercent', c.skill + '%');
-    setText('commPercent', c.communication + '%');
+// Calculate and display skill circles (Author: Caleb Perez, 04/30/26)
+
+    deriveCircleValues(job).then(function(c) {
+      setText('expPercent', c.experience + '%');
+      setText('skillPercent', c.skill + '%');
+      setText('commPercent', c.communication + '%');
+
+      document.getElementById('expCircle').style.background =
+        `conic-gradient(#07294D 0% ${c.experience}%, #eee ${c.experience}%)`;
+      document.getElementById('skillCircle').style.background =
+        `conic-gradient(#07294D 0% ${c.skill}%, #eee ${c.skill}%)`;
+      document.getElementById('commCircle').style.background =
+        `conic-gradient(#07294D 0% ${c.communication}%, #eee ${c.communication}%)`;
+    });
 
     const applyLink = job.apply_options && job.apply_options[0]
       ? job.apply_options[0].link
@@ -259,15 +276,48 @@ const res = await fetch(url);
     return s ? s.items : [];
   }
 
-  function deriveCircleValues(job) {
+  async function deriveCircleValues(job) {
     const title = (job.title || '').toLowerCase();
+    const desc  = (job.description || '').toLowerCase();
     const isSenior = /senior|lead|principal|staff/.test(title);
     const isIntern = /intern|junior|entry/.test(title);
-    const ext = job.detected_extensions || {};
+
+    // experience score based on job level
+    const experience = isSenior ? 85 : isIntern ? 35 : 65;
+
+    // fetch user's resume skills
+    let skillScore   = 0;
+    let matchScore   = 0;
+
+    try {
+      const token = localStorage.getItem('token') || '';
+      const res   = await fetch('/resume/skills', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+
+      if (res.ok) {
+        const data   = await res.json();
+        const skills = data.skills || [];
+
+        // industry skill — how many resume skills appear in the job description
+        const jobSkillMatches = skills.filter(s => desc.includes(s)).length;
+        skillScore = skills.length > 0
+          ? Math.min(100, Math.round((jobSkillMatches / skills.length) * 100 * 2.5))
+          : 0;
+
+        // resume match — how many resume skills appear in title + description combined
+        const fullText     = (title + ' ' + desc).toLowerCase();
+        const totalMatches = skills.filter(s => fullText.includes(s)).length;
+        matchScore = Math.round((experience + skillScore) / 2);
+      }
+    } catch (e) {
+      console.error('Skills fetch error:', e);
+    }
+
     return {
-      experience:    isSenior ? 85 : isIntern ? 35 : 65,
-      skill:         isSenior ? 90 : isIntern ? 50 : 75,
-      communication: ext.schedule_type === 'Full-time' ? 70 : 55
+      experience,
+      skill: skillScore,
+      communication: matchScore
     };
   }
 

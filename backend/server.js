@@ -6,6 +6,11 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+
+// For parsing PDF and Word resumes (if you want to extract text later), Author: Caleb Perez, 04/30/26
+const pdfParse = require("pdf-parse");
+const mammoth  = require("mammoth");
+
 // importing axios library to call data from API
 const axios = require("axios");
 require("dotenv").config();
@@ -17,6 +22,8 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..")));
 app.use("/uploads/profile_pics", express.static(path.join(__dirname, "uploads/profile_pics")));
+
+app.use('/resume/skills', (req, res, next) => next());
 
 // API Endpoints
 app.get("/api/jobs", async (req, res) => { 
@@ -268,6 +275,7 @@ app.get("/resume/view", (req, res) => {
   );
 });
 
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
@@ -501,6 +509,57 @@ app.post("/resume/upload", requireAuth, upload.single("resume"), (req, res) => {
         resume_id: this.lastID,
         user_id: userId,
       });
+    }
+  );
+});
+
+// Extract skills from uploaded resumes; Author: Caleb Perez, 04/30/26
+app.get("/resume/skills", requireAuth, async (req, res) => {
+  const userId = req.user.user_id;
+
+  db.get(
+    `SELECT mime_type, upload_path FROM resumes WHERE user_id = ? LIMIT 1`,
+    [userId],
+    async (err, row) => {
+      if (err)  return res.status(500).json({ error: "Database error" });
+      if (!row) return res.status(404).json({ error: "No resume found" });
+
+      try {
+        let text = "";
+
+        if (row.mime_type === "application/pdf") {
+          const buffer = await fs.promises.readFile(row.upload_path);
+          const parsed = await pdfParse(buffer);
+          text = parsed.text;
+        } else {
+          const result = await mammoth.extractRawText({ path: row.upload_path });
+          text = result.value;
+        }
+
+        const skillKeywords = [
+          "python", "java", "javascript", "typescript", "c++", "c#", "ruby",
+          "go", "rust", "swift", "kotlin", "php", "r", "matlab", "scala",
+          "html", "css", "react", "angular", "vue", "node", "express",
+          "django", "flask", "spring", "rest", "graphql",
+          "sql", "mysql", "postgresql", "mongodb", "firebase", "pandas",
+          "numpy", "tensorflow", "pytorch", "machine learning", "data analysis",
+          "aws", "azure", "gcp", "docker", "kubernetes", "git", "linux",
+          "ci/cd", "jenkins", "terraform",
+          "networking", "tcp/ip", "dns", "http", "cybersecurity",
+          "wireshark", "bash", "powershell", "active directory",
+          "communication", "teamwork", "leadership", "problem solving",
+          "agile", "scrum", "project management"
+        ];
+
+        const lowerText = text.toLowerCase();
+        const found = skillKeywords.filter(skill => lowerText.includes(skill));
+
+        return res.json({ skills: found });
+
+      } catch (e) {
+        console.error("Resume parse error:", e.message);
+        return res.status(500).json({ error: "Failed to parse resume" });
+      }
     }
   );
 });
