@@ -78,41 +78,17 @@ header {
   cursor: pointer;
   font-weight: bold;
   color: white;
-
+  text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-
-  background: transparent;
   outline: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
 }
 
-/* hover effect */
 .nav-item:hover {
   text-decoration: underline;
 }
 
-/* active tab (NO BOX) */
 .nav-item.active {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-}
-
-/* REMOVE WHITE CLICK BOX COMPLETELY */
-.nav-item:focus,
-.nav-item:active,
-.nav-item:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
-
-/* extra safety override */
-.nav-item * {
-  outline: none !important;
-  box-shadow: none !important;
+  text-decoration: underline;
 }
 
 /* =========================
@@ -136,50 +112,75 @@ header {
   display: flex;
   align-items: center;
   gap: 6px;
-
+  text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   outline: none;
-  box-shadow: none;
 }
 
 .settings-btn:hover {
   background: rgba(255,255,255,0.28);
 }
 
-.logout {
+.logout-btn {
   background: #FFC600;
   color: #07294D;
   padding: 8px 12px;
   border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logout-btn:hover {
+  background: #e6b200;
 }
 
 /* =========================
-   GLOBAL BUTTON FIX
+   SECTIONS / ANIMATION
 ========================= */
 
-button {
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-  box-shadow: none;
+.dashboard-section {
+  display: none;
+  opacity: 0;
 }
 
-button:focus,
-button:active,
-button:focus-visible {
-  outline: none;
-  box-shadow: none;
+.dashboard-section.active {
+  display: block;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   PAGE TITLE
+========================= */
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.page-title i {
+  font-size: 1.4rem;
+  color: #07294D;
+}
+
+.page-title h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #07294D;
 }
 
 /* =========================
    SAVED PAGE CONTENT
 ========================= */
-
-.saved-section h1 {
-  color: #07294D;
-  margin-bottom: 10px;
-}
 
 .saved-jobs-container {
   display: grid;
@@ -189,23 +190,378 @@ button:focus-visible {
 }
 
 /* Saved job cards */
-.saved-card {
+.saved-card,
+.saved-job-card {
   background: white;
-  padding: 15px;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
   transition: 0.2s ease;
 }
 
-.saved-card:hover {
+.saved-card:hover,
+.saved-job-card:hover {
   transform: translateY(-3px);
 }
 
+.saved-job-card h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #07294D;
+}
+
+.saved-job-card p {
+  margin: 4px 0;
+  font-size: 0.88rem;
+  color: #555;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 16px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  color: #c8cdd8;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
 /* =========================
-   OPTIONAL ANIMATION
+   TABS
 ========================= */
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e0e4ec;
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:hover {
+  color: #07294D;
+}
+
+.tab-btn.active {
+  color: #07294D;
+  border-bottom-color: #07294D;
+}
+
+.tab-count {
+  background: #e0e4ec;
+  color: #555;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 7px;
+  border-radius: 99px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.tab-btn.active .tab-count {
+  background: #07294D;
+  color: white;
+}
+
+/* =========================
+   TAB PANELS
+========================= */
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* =========================
+   APPLIED BADGE
+========================= */
+
+.applied-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #eafaf1;
+  color: #1e8449;
+  border: 1px solid #a9dfbf;
+  font-size: 0.78rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   CARD DETAIL LINES
+========================= */
+
+.job-salary,
+.job-location {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.job-salary i { color: #07294D; }
+.job-location i { color: #07294D; }
+
+.job-desc {
+  font-size: 0.82rem;
+  color: #777;
+  margin: 10px 0 0;
+  line-height: 1.5;
+}
+
+/* =========================
+   CARD ACTIONS ROW
+========================= */
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.remove-btn {
+  padding: 8px 16px;
+  background: white;
+  color: #c0392b;
+  border: 2px solid #c0392b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.85rem;
+  transition: background 0.15s;
+}
+
+.remove-btn:hover {
+  background: #fdecea;
+}
+
+.offer-btn {
+  padding: 8px 16px;
+  background: #07294D;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+
+.offer-btn:hover {
+  background: #0a3a6e;
+}
+
+/* =========================
+   OFFER BADGE & CARD
+========================= */
+
+.offer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fffbea;
+  color: #b7760d;
+  border: 1px solid #f5d97e;
+  font-size: 0.78rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 10px;
+}
+
+.offer-card {
+  border-left: 4px solid #FFC600;
+}
+
+/* Offers tab count pulse when non-zero */
+.tab-count.has-offers {
+  background: #FFC600;
+  color: #07294D;
+}
+
+.tab-btn.active .tab-count.has-offers {
+  background: #FFC600;
+  color: #07294D;
+}
+
+/* =========================
+   PROGRESS TRACKER
+========================= */
+
+.progress-tracker {
+  display: flex;
+  align-items: center;
+  margin: 20px 0 6px;
+  gap: 0;
+}
+
+.prog-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.step-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #d0d5e0;
+  background: white;
+  color: #aaa;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.step-dot:hover {
+  border-color: #07294D;
+  color: #07294D;
+  transform: scale(1.08);
+}
+
+.prog-step.done .step-dot {
+  background: #07294D;
+  border-color: #07294D;
+  color: white;
+}
+
+.prog-step.active .step-dot {
+  background: #07294D;
+  border-color: #07294D;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(7, 41, 77, 0.15);
+}
+
+/* Last step (Offer) uses gold when active */
+.prog-step.active:last-child .step-dot,
+.prog-step.done:last-child .step-dot {
+  background: #FFC600;
+  border-color: #FFC600;
+  color: #07294D;
+}
+
+.step-label {
+  font-size: 0.72rem;
+  font-weight: bold;
+  color: #aaa;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.prog-step.done .step-label,
+.prog-step.active .step-label {
+  color: #07294D;
+}
+
+.prog-step.active:last-child .step-label,
+.prog-step.done:last-child .step-label {
+  color: #b7760d;
+}
+
+.prog-line {
+  flex: 1;
+  height: 2px;
+  background: #d0d5e0;
+  margin-bottom: 22px;
+  min-width: 20px;
+  transition: background 0.2s;
+}
+
+.prog-line.done {
+  background: #07294D;
+}
+
+/* Rejected state dims the tracker */
+.progress-tracker.is-rejected .step-dot {
+  background: #f5f5f5;
+  border-color: #ddd;
+  color: #ccc;
+  cursor: default;
+}
+
+.progress-tracker.is-rejected .step-dot:hover {
+  transform: none;
+  border-color: #ddd;
+  color: #ccc;
+}
+
+.progress-tracker.is-rejected .step-label {
+  color: #ccc;
+}
+
+.progress-tracker.is-rejected .prog-line {
+  background: #e0e0e0;
+}
+
+/* =========================
+   TRACKER ACTIONS ROW
+========================= */
+
+.tracker-actions {
+  margin-bottom: 4px;
+}
+
+.reject-btn {
+  padding: 5px 12px;
+  background: white;
+  color: #888;
+  border: 1px solid #ddd;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.reject-btn:hover,
+.reject-btn.active {
+  background: #fdecea;
+  color: #c0392b;
+  border-color: #f5c6c2;
 }

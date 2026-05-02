@@ -252,6 +252,18 @@ const res = await fetch(url);
       ? job.apply_options[0].link
       : (job.source_link || job.share_link || '#');
     document.getElementById('applyBtn').onclick = function () {
+      const appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || [];
+      if (!appliedJobs.some(j => j.title === job.title)) {
+        appliedJobs.push({
+          id: Date.now(),
+          title: job.title || '',
+          salary: ext.salary || job.salary || '',
+          location: job.location || '',
+          description: (job.description || '').slice(0, 300),
+          appliedAt: new Date().toLocaleDateString()
+        });
+        localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
+      }
       window.open(applyLink, '_blank');
     };
 

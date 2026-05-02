@@ -2,11 +2,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Saved Jobs</title>
-
-    <!-- Modified by; Caleb Perez, 04/26/26 -->
-  <link rel="stylesheet" href="/savedjobs/saved.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Jobs – Internly</title>
+  <!-- Modified by; Caleb Perez, 04/26/26 -->
+  <link rel="stylesheet" href="saved.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 
@@ -14,91 +13,217 @@
 
 <header>
   <div class="header-left">
-    <a href="../dashboard/dashboard.html" class="logo">Internly</a>
-
-<!-- Nav links Modified by Caleb Perez, 04/26/26 -->
-
-    <div class="nav-item" onclick="window.location.href='/dashboard'">
-  <i class="fas fa-briefcase"></i> Jobs
-</div>
-
-     <div class="nav-item" onclick="window.location.href='/resume-page'">
-  <i class="fas fa-file-alt"></i> Resume
-</div>
-
-      <div class="nav-item active">
-        <i class="fas fa-bookmark"></i> Saved
-      </div>
-    </div>
+    <a href="../frontpage/front.html" class="logo">Internly</a>
+    <nav class="nav-top">
+      <a class="nav-item" href="../dashboard/dashboard.html"><i class="fas fa-briefcase"></i> Jobs</a>
+      <a class="nav-item" href="/resume-page"><i class="fas fa-file-alt"></i> Resume</a>
+      <a class="nav-item active" href="../savedjobs/saved.html"><i class="fas fa-bookmark"></i> Saved</a>
+    </nav>
   </div>
-
   <div class="header-right">
-    <button class="settings-btn" onclick="window.location.href='/settings'">
-      <i class="fas fa-cog"></i> Settings
-    </button>
-    <a href="/login" class="logout">Logout</a>
+    <a href="../settingpage/setting.html" class="settings-btn"><i class="fas fa-cog"></i> Settings</a>
+    <a href="../frontpage/front.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 </header>
 <main>
 
-  <section class="saved-section">
-    <h1>Saved Jobs</h1>
-    <p style="color:#352a2a;">Your saved jobs will appear here.</p>
+  <section class="saved-section dashboard-section active">
+    <div class="page-title">
+      <i class="fas fa-bookmark"></i>
+      <h1>My Jobs</h1>
+    </div>
 
-    <div id="savedJobsContainer" class="saved-jobs-container">
-      <!-- Saved job cards will be inserted here -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('saved', this)">
+        <i class="fas fa-bookmark"></i> Saved
+        <span class="tab-count" id="savedCount">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('applied', this)">
+        <i class="fas fa-paper-plane"></i> Applied
+        <span class="tab-count" id="appliedCount">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('offers', this)">
+        <i class="fas fa-envelope-open-text"></i> Offers
+        <span class="tab-count offers-count" id="offersCount">0</span>
+      </button>
+    </div>
+
+    <div id="savedPanel" class="tab-panel active">
+      <div id="savedJobsContainer" class="saved-jobs-container"></div>
+    </div>
+
+    <div id="appliedPanel" class="tab-panel">
+      <div id="appliedJobsContainer" class="saved-jobs-container"></div>
+    </div>
+
+    <div id="offersPanel" class="tab-panel">
+      <div id="offersJobsContainer" class="saved-jobs-container"></div>
     </div>
   </section>
 
 </main>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+const STAGES = ['applied', 'interview', 'offer'];
 
-  const container = document.getElementById("savedJobsContainer");
+const STAGE_META = {
+  applied:   { label: 'Applied',   icon: 'fas fa-paper-plane' },
+  interview: { label: 'Interview', icon: 'fas fa-calendar-check' },
+  offer:     { label: 'Offer',     icon: 'fas fa-envelope-open-text' }
+};
 
-  // Get saved jobs from localStorage
-  const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tab + 'Panel').classList.add('active');
+}
 
-  // Empty state
-  if (savedJobs.length === 0) {
-    container.innerHTML = "<p>No saved jobs yet.</p>";
+const emptyIcons  = { savedJobs: 'bookmark', appliedJobs: 'paper-plane', offerJobs: 'envelope-open-text' };
+const emptyLabels = { savedJobs: 'saved', appliedJobs: 'applied to', offerJobs: 'received offers for' };
+
+function buildProgressTracker(job) {
+  const currentStatus = job.status || 'applied';
+  const isRejected    = currentStatus === 'rejected';
+  const currentIdx    = STAGES.indexOf(currentStatus);
+
+  const steps = STAGES.map((stage, i) => {
+    const done    = !isRejected && i <= currentIdx;
+    const active  = !isRejected && i === currentIdx;
+    const meta    = STAGE_META[stage];
+    return `
+      <div class="prog-step ${done ? 'done' : ''} ${active ? 'active' : ''}" data-stage="${stage}">
+        <button class="step-dot" title="Mark as ${meta.label}">
+          ${done ? '<i class="fas fa-check"></i>' : (i + 1)}
+        </button>
+        <span class="step-label">${meta.label}</span>
+      </div>
+      ${i < STAGES.length - 1 ? `<div class="prog-line ${(!isRejected && i < currentIdx) ? 'done' : ''}"></div>` : ''}
+    `;
+  }).join('');
+
+  const rejectedClass = isRejected ? 'active' : '';
+  return `
+    <div class="progress-tracker ${isRejected ? 'is-rejected' : ''}">
+      ${steps}
+    </div>
+    <div class="tracker-actions">
+      <button class="reject-btn ${rejectedClass}">
+        <i class="fas fa-times-circle"></i>
+        ${isRejected ? 'Marked Rejected' : 'Mark Rejected'}
+      </button>
+    </div>
+  `;
+}
+
+function renderCards(jobs, containerId, storageKey) {
+  const container = document.getElementById(containerId);
+  if (jobs.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-${emptyIcons[storageKey]}"></i>
+        <p>No jobs ${emptyLabels[storageKey]} yet.</p>
+      </div>`;
     return;
   }
 
-  // Render each saved job
-  savedJobs.forEach(job => {
+  jobs.forEach(job => {
     const card = document.createElement("div");
-    card.className = "saved-job-card";
+    const isOffer = storageKey === 'offerJobs';
+    card.className = "saved-job-card" + (isOffer ? ' offer-card' : '');
+
+    let badge = '';
+    if (storageKey === 'appliedJobs') {
+      badge = `<span class="applied-badge"><i class="fas fa-check-circle"></i> Applied${job.appliedAt ? ' · ' + job.appliedAt : ''}</span>`;
+    } else if (isOffer) {
+      badge = `<span class="offer-badge"><i class="fas fa-star"></i> Offer Received${job.offeredAt ? ' · ' + job.offeredAt : ''}</span>`;
+    }
+
+    const tracker = storageKey === 'appliedJobs' ? buildProgressTracker(job) : '';
 
     card.innerHTML = `
+      ${badge}
       <h2>${job.title}</h2>
-      <p><strong>Salary:</strong> ${job.salary}</p>
-      <p><strong>Location:</strong> ${job.location}</p>
-      <p>${job.description}</p>
-      <button class="remove-btn">Remove</button>
+      ${job.salary   ? `<p class="job-salary"><i class="fas fa-dollar-sign"></i> ${job.salary}</p>`         : ''}
+      ${job.location ? `<p class="job-location"><i class="fas fa-map-marker-alt"></i> ${job.location}</p>`  : ''}
+      ${job.description ? `<p class="job-desc">${job.description}</p>` : ''}
+      ${tracker}
+      <div class="card-actions">
+        <button class="remove-btn"><i class="fas fa-trash-alt"></i> Remove</button>
+      </div>
     `;
 
-    // Remove button
-    card.querySelector(".remove-btn").addEventListener("click", function() {
-      removeJob(job.id);
-    });
+    if (storageKey === 'appliedJobs') {
+      card.querySelectorAll('.step-dot').forEach((dot, i) => {
+        dot.addEventListener('click', () => updateStatus(job.id, STAGES[i]));
+      });
+      card.querySelector('.reject-btn').addEventListener('click', () => {
+        const current = job.status || 'applied';
+        updateStatus(job.id, current === 'rejected' ? 'applied' : 'rejected');
+      });
+    }
 
+    card.querySelector('.remove-btn').addEventListener('click', () => removeEntry(job.id, storageKey));
     container.appendChild(card);
   });
+}
 
-});
+function updateStatus(id, newStatus) {
+  let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || [];
+  const job = appliedJobs.find(j => j.id === id);
+  if (!job) return;
 
-// Remove function
-function removeJob(id) {
-  let savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+  job.status = newStatus;
+  localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
 
-  savedJobs = savedJobs.filter(job => job.id !== id);
-
-  localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+  // Sync to offerJobs when status reaches 'offer'
+  if (newStatus === 'offer') {
+    const offerJobs = JSON.parse(localStorage.getItem("offerJobs")) || [];
+    if (!offerJobs.some(j => j.id === id)) {
+      offerJobs.push({ ...job, offeredAt: new Date().toLocaleDateString() });
+      localStorage.setItem("offerJobs", JSON.stringify(offerJobs));
+    }
+  } else {
+    // Remove from offerJobs if status moved back
+    let offerJobs = JSON.parse(localStorage.getItem("offerJobs")) || [];
+    offerJobs = offerJobs.filter(j => j.id !== id);
+    localStorage.setItem("offerJobs", JSON.stringify(offerJobs));
+  }
 
   location.reload();
 }
+
+function removeEntry(id, storageKey) {
+  let list = JSON.parse(localStorage.getItem(storageKey)) || [];
+  list = list.filter(j => j.id !== id);
+  localStorage.setItem(storageKey, JSON.stringify(list));
+
+  if (storageKey === 'appliedJobs') {
+    let offerJobs = JSON.parse(localStorage.getItem("offerJobs")) || [];
+    offerJobs = offerJobs.filter(j => j.id !== id);
+    localStorage.setItem("offerJobs", JSON.stringify(offerJobs));
+  }
+
+  location.reload();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const savedJobs   = JSON.parse(localStorage.getItem("savedJobs"))   || [];
+  const appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || [];
+  const offerJobs   = JSON.parse(localStorage.getItem("offerJobs"))   || [];
+
+  document.getElementById("savedCount").textContent   = savedJobs.length;
+  document.getElementById("appliedCount").textContent = appliedJobs.length;
+  document.getElementById("offersCount").textContent  = offerJobs.length;
+
+  renderCards(savedJobs,   "savedJobsContainer",   "savedJobs");
+  renderCards(appliedJobs, "appliedJobsContainer", "appliedJobs");
+  renderCards(offerJobs,   "offersJobsContainer",  "offerJobs");
+
+  if (offerJobs.length > 0) {
+    document.getElementById("offersCount").classList.add("has-offers");
+  }
+});
 </script>
 
 </body>
