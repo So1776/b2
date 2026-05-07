@@ -124,15 +124,17 @@ function renderTable() {
       <td data-label="Location">${escHtml(item.location || "—")}</td>
       <td data-label="Date Applied">${formatDate(item.date_applied)}</td>
       <td data-label="Status">
-        <span class="status-badge status-${item.status.toLowerCase()}">${escHtml(item.status)}</span>
+        <span class="badge badge-${escHtml(item.status)}">${escHtml(item.status)}</span>
       </td>
       <td data-label="Actions" class="actions-col">
-        <button class="action-btn edit-btn" data-id="${item.id}" title="Edit">
-          <i class="fas fa-pencil-alt"></i>
-        </button>
-        <button class="action-btn delete-btn" data-id="${item.id}" title="Delete">
-          <i class="fas fa-trash-alt"></i>
-        </button>
+        <div class="row-actions">
+          <button class="icon-btn edit-btn" data-id="${item.id}" title="Edit">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="icon-btn del-btn" data-id="${item.id}" title="Delete">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
       </td>
     `;
     tableBody.appendChild(tr);
@@ -165,7 +167,7 @@ async function handleDelete(id) {
   if (!confirmed) return;
 
   // Optimistic UI: remove row immediately
-  const btn = tableBody.querySelector(`.delete-btn[data-id="${id}"]`);
+  const btn = tableBody.querySelector(`.del-btn[data-id="${id}"]`);
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -298,14 +300,14 @@ function showToast(message, type = "success") {
   if (existing) existing.remove();
 
   const toast = document.createElement("div");
-  toast.className = `toast toast-${type}`;
-  toast.textContent = message;
+  toast.className = "toast";
+  toast.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i> ${escHtml(message)}`;
   document.body.appendChild(toast);
 
   // Trigger animation
-  requestAnimationFrame(() => toast.classList.add("toast-visible"));
+  requestAnimationFrame(() => toast.classList.add("show"));
   setTimeout(() => {
-    toast.classList.remove("toast-visible");
+    toast.classList.remove("show");
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
