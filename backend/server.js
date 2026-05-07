@@ -239,6 +239,10 @@ app.get("/saved", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "savedjobs", "saved.html"));
 });
 
+app.get('/internshiptracker', (req, res) => {
+  res.sendFile(path.join(__dirname, "internshiptracker", "internshiptracker.html"));
+});
+
 // Allow the logged-in user to view their resume
 app.get("/resume/view", (req, res) => {
   // accept token from Authorization header OR ?token= query param
@@ -588,6 +592,90 @@ app.get("/api/internships", async (req, res) => {
     console.error("SerpApi error:", err.message);
     res.status(500).json({ error: "Failed to fetch internships" });
   }
+});
+
+// ── Internship Tracker Routes ─────────────────────────────────────────────
+
+// Create the internships table if it doesn't exist
+db.run(`
+  CREATE TABLE IF NOT EXISTS internships (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    company TEXT NOT NULL,
+    role TEXT NOT NULL,
+    location TEXT,
+    date_applied TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Applied',
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+// GET all internships for logged-in user
+app.get("/api/tracker", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+  db.all(
+    "SELECT * FROM internships WHERE user_id = ? ORDER BY created_at DESC",
+    [userId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      res.json(rows);
+    }
+  );
+});
+
+// POST create a new internship
+app.post("/api/tracker", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+  const { company, role, location, date_applied, status, notes } = req.body;
+  if (!company || !role || !date_applied) {
+    return res.status(400).json({ error: "company, role, and date_applied are required" });
+  }
+  db.run(
+    `INSERT INTO internships (user_id, company, role, location, date_applied, status, notes)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [userId, company, role, location || "", date_applied, status || "Applied", notes || ""],
+    function (err) {
+      if (err) return res.status(500).json({ error: "Database error" });
+      db.get("SELECT * FROM internships WHERE id = ?", [this.lastID], (err, row) => {
+        res.status(201).json(row);
+      });
+    }
+  );
+});
+
+// PUT update an internship
+app.put("/api/tracker/:id", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+  const { id } = req.params;
+  const { company, role, location, date_applied, status, notes } = req.body;
+  db.run(
+    `UPDATE internships SET company=?, role=?, location=?, date_applied=?, status=?, notes=?
+     WHERE id=? AND user_id=?`,
+    [company, role, location, date_applied, status, notes, id, userId],
+    function (err) {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (this.changes === 0) return res.status(404).json({ error: "Not found" });
+      db.get("SELECT * FROM internships WHERE id = ?", [id], (err, row) => {
+        res.json(row);
+      });
+    }
+  );
+});
+
+// DELETE an internship
+app.delete("/api/tracker/:id", requireAuth, (req, res) => {
+  const userId = req.user.user_id;
+  const { id } = req.params;
+  db.run(
+    "DELETE FROM internships WHERE id=? AND user_id=?",
+    [id, userId],
+    function (err) {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (this.changes === 0) return res.status(404).json({ error: "Not found" });
+      res.json({ message: "Deleted" });
+    }
+  );
 });
 
 app.listen(PORT, "0.0.0.0", () => {
