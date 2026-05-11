@@ -135,9 +135,9 @@ header {
 }
 
 
-/* =========================
+/* 
    SEARCH BAR
-========================= */
+ */
 
 .search-wrapper{
   display:flex;
@@ -188,9 +188,9 @@ header {
 }
 
 
-/* =========================
+/* 
    JOB LAYOUT
-========================= */
+ */
 
 .jobs-container{
   display:flex;
@@ -251,9 +251,9 @@ header {
 }
 
 
-/* =========================
+/* 
    SKILL CIRCLES
-========================= */
+ */
 
 .skill-circles{
   display:flex;
@@ -290,9 +290,9 @@ header {
 }
 
 
-/* =========================
+/* 
    BUTTONS
-========================= */
+ */
 
 .job-buttons{
   margin-top:30px;
@@ -635,4 +635,75 @@ header {
   display: flex;
   align-items: center;
   padding-bottom: 25px;
+}
+
+
+/* 
+   TOAST NOTIFICATION, Author; Caleb Perez, 05/10/26
+*/
+
+.internly-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    font-family: Arial, sans-serif;
+    font-size: .92rem;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(-16px);
+    transition: opacity .35s ease, transform .35s ease;
+    min-width: 220px;
+}
+
+.internly-toast.toast-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.internly-toast.toast-hide {
+    opacity: 0;
+    transform: translateY(-16px);
+}
+
+.toast-success {
+    background: #07294D;
+    color: white;
+}
+
+.toast-warning {
+    background: #FFC600;
+    color: #07294D;
+}
+
+/* animated checkmark */
+.toast-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon circle {
+    stroke: #FFC600;
+    stroke-width: 3;
+}
+
+.toast-success .toast-check {
+    stroke: #FFC600;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: drawCheck .5s ease .2s forwards;
+}
+
+@keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
 }
