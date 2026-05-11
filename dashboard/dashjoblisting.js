@@ -133,6 +133,7 @@ document.getElementById("commCircle").style.background =
 `conic-gradient(#07294D 0% ${jobData.circles[2]}%, #eee ${jobData.circles[2]}%)`
 
 }
+// Modified Toast Notification. Author; Caleb Perez, 05/10/26
 
 function saveJob() {
     const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
@@ -145,15 +146,42 @@ function saveJob() {
         location: document.getElementById("jobMeta").innerText
     };
 
-    // Prevent duplicates
     if (!savedJobs.some(job => job.title === newJob.title)) {
         savedJobs.push(newJob);
         localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
-        alert("Job saved successfully!");
+        showToast("Job saved successfully!", "success");
     } else {
-        alert("Job already saved.");
+        showToast("Job already saved.", "warning");
     }
 }
+
+function showToast(message, type = "success") {
+    const existing = document.getElementById("internly-toast");
+    if (existing) existing.remove();
+
+    const icon = type === "success"
+        ? `<svg class="toast-icon" viewBox="0 0 52 52">
+             <circle cx="26" cy="26" r="24" fill="none"/>
+             <path class="toast-check" d="M14 27 l8 8 l16 -18" fill="none"/>
+           </svg>`
+        : `<i class="fas fa-bookmark" style="color:#FFC600;font-size:1.1rem;"></i>`;
+
+    const toast = document.createElement("div");
+    toast.id = "internly-toast";
+    toast.className = `internly-toast toast-${type}`;
+    toast.innerHTML = `${icon}<span>${message}</span>`;
+
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add("toast-show"));
+
+    setTimeout(() => {
+        toast.classList.remove("toast-show");
+        toast.classList.add("toast-hide");
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+}
+// End of Toast Notification
 
 document.addEventListener("DOMContentLoaded", function(){
 
